@@ -1,0 +1,26 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+/*
+    Document   : JMetroDarkTheme
+    Created on : Oct 23, 2012, 7:12:32 PM
+    Author     : Pedro Duque Vieira
+    Description:
+        Dark Metro style sheet for use in JavaFX applications
+*/
+
+
+
+
+
+.TextField {
+
+    -fx-background: #1A1A1A; 
+  /*   -fx-height:25px; 
+    -fx-width: 275px; */
+    -fx-border-radius: 60em; 
+   /*-fx-border: none;*/ 
+    -fx-color: #A2A2A2; 
+   /*  -fx-padding-left: 1.5em; 
+    -fx-outline: none; 
+    -fx-box-shadow: 0 4px 6px -5px hsl(0, 0%, 40%), inset 0px 4px 6px -5px hsl(0, 0%, 2%) */
+}
+
