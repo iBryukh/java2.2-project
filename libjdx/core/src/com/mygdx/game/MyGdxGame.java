@@ -1,49 +1,62 @@
 package com.mygdx.game;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class MyGdxGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Player player;
-
+	
+	public static final int PIXS_IN_METER = 10;
+	private static World world = new World(new Vector2(), true);;
+	private SpriteBatch batch;
+	private Player player;
+	private Box2DDebugRenderer debugRenderer;
+	private Matrix4 debugMatrix;
+	private OrthographicCamera camera;
+	
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
 		player = new Player();
+		
+		createWorldBounds();
+        
+		camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        debugRenderer = new Box2DDebugRenderer();
+        camera.translate(new Vector3(Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f,0));
 	}
 
 	@Override
 	public void render() {
+		camera.update();
+		world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		player.getBody().setLinearVelocity(0, 0);
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			if (player.getBoundingRectangle().x >= 0)
-				player.translateX(-5.0f);
 			player.setRotation(90);
+			player.getBody().setLinearVelocity(new Vector2(-30,0));
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			if (player.getBoundingRectangle().x <= Gdx.graphics.getWidth() - 50)
-				player.translateX(5.0f);
 			player.setRotation(-90);
+			player.getBody().setLinearVelocity(new Vector2(30,0));
 		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			if (player.getBoundingRectangle().y <= Gdx.graphics.getHeight() - 50)
-				player.translateY(5.0f);
 			player.setRotation(0);
+			player.getBody().setLinearVelocity(new Vector2(0,30));
 		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			if (player.getBoundingRectangle().y >= 0)
-				player.translateY(-5.0f);
 			player.setRotation(180);
+			player.getBody().setLinearVelocity(new Vector2(0,-30));
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			int speedX = 0;
@@ -66,13 +79,37 @@ public class MyGdxGame extends ApplicationAdapter {
 			player.addBullet(b);
 		}
 		
-		//Texture texture = new Texture ("ground.png");
-		//texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		batch.setProjectionMatrix(camera.combined);
+		debugMatrix = batch.getProjectionMatrix().cpy().scale(10,10, 0);
+		debugRenderer.render(world, debugMatrix);
 		
 		batch.begin();
-		//batch.draw (texture, 0, 0, 0, 0, 800, 600);
-		//batch.draw (texture, 0, 0, 800, 600, 4, 4, 32, 32);
+		player.setPosition(player.getBody().getPosition().x*10-64, player.getBody().getPosition().y*10-64);
 		player.draw(batch);
 		batch.end();
+	}
+	
+	public static World getWorld() {
+		return world;
+	}
+	
+	private void createWorldBounds () {
+        createEdge(0,0,Gdx.graphics.getWidth()/PIXS_IN_METER,0);
+        createEdge(0,0,0,Gdx.graphics.getHeight()/PIXS_IN_METER);
+        createEdge(Gdx.graphics.getWidth()/PIXS_IN_METER,0,Gdx.graphics.getWidth()/PIXS_IN_METER,Gdx.graphics.getHeight()/PIXS_IN_METER);
+        createEdge(0,Gdx.graphics.getHeight()/PIXS_IN_METER,Gdx.graphics.getWidth()/PIXS_IN_METER,Gdx.graphics.getHeight()/PIXS_IN_METER);
+	}
+	
+	private void createEdge (float f1, float f2, float f3, float f4) {
+		BodyDef bodyDef2 = new BodyDef();
+        bodyDef2.type = BodyDef.BodyType.StaticBody;
+        bodyDef2.position.set(0,0);
+        FixtureDef fixtureDef2 = new FixtureDef();
+        EdgeShape edgeShape = new EdgeShape();
+        edgeShape.set(f1,f2,f3,f4);
+        fixtureDef2.shape = edgeShape;
+        world.createBody(bodyDef2).createFixture(fixtureDef2);
+        edgeShape.dispose();
+        
 	}
 }
