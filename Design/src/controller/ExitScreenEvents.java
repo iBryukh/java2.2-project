@@ -7,12 +7,24 @@ import model.resManager;
 import view.EnterScreen;
 
 public class ExitScreenEvents {
+	
+	public static ImageView buttonExit(EnterScreen ES){
+    	ImageView img = new ImageView(resManager.getEBI());
+    	
+    	img.setOnMouseEntered(new OnMouseEntered());
+    	img.setOnMouseExited(new OnMouseExit());
+    	img.setOnMouseClicked(new OnMouseClicked(ES));
+    	
+        return img;
+    	}
+	
     public static class OnMouseEntered implements EventHandler{
 
+    
         @Override
         public void handle(Event event) {
             ImageView iv = (ImageView) event.getSource();
-            iv.setImage(resManager.getExitPressedButtonImage());
+            iv.setImage(resManager.getEPBI());
         }
         
     }
@@ -21,7 +33,7 @@ public class ExitScreenEvents {
         @Override
         public void handle(Event event) {
             ImageView iv = (ImageView) event.getSource();
-            iv.setImage(resManager.getExitButtonImage());
+            iv.setImage(resManager.getEBI());
         }
         
     }
