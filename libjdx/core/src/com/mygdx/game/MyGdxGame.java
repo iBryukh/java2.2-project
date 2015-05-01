@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -20,10 +22,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	public static final int PIXS_IN_METER = 10;
 	private static World world = new World(new Vector2(), true);;
 	private SpriteBatch batch;
-	private Player player;
+	private static Player player;
 	private Box2DDebugRenderer debugRenderer;
 	private Matrix4 debugMatrix;
 	private OrthographicCamera camera;
+	private static ArrayList<Cell> cells;
 	
 	@Override
 	public void create() {
@@ -31,6 +34,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		player = new Player();
 		
 		createWorldBounds();
+		createLabyrinth();
         
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         debugRenderer = new Box2DDebugRenderer();
@@ -82,15 +86,53 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		debugMatrix = batch.getProjectionMatrix().cpy().scale(10,10, 0);
 		debugRenderer.render(world, debugMatrix);
-		
 		batch.begin();
 		player.setPosition(player.getBody().getPosition().x*10-64, player.getBody().getPosition().y*10-64);
 		player.draw(batch);
+		for (Cell c:cells) c.draw(batch);
+		for (int i = 0; i < player.getBullets().size(); ++i) player.getBullets().get(i).collide();
 		batch.end();
 	}
 	
-	public static World getWorld() {
-		return world;
+	private void createLabyrinth() {
+		/*
+		int[][] xyarr = 
+			{
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			};
+			*/
+		int[][] xyarr = 
+			{
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			};
+		cells = new ArrayList<Cell>();
+		for (int i = 0; i < xyarr.length; ++i) {
+			for (int j = 0; j < xyarr[i].length; ++j) {
+				if (xyarr[i][j]!=0) cells.add (new Cell (j*50, Gdx.graphics.getHeight()-(i+1)*50, xyarr[i][j]));
+			}
+		}
 	}
 	
 	private void createWorldBounds () {
@@ -111,5 +153,17 @@ public class MyGdxGame extends ApplicationAdapter {
         world.createBody(bodyDef2).createFixture(fixtureDef2);
         edgeShape.dispose();
         
+	}
+	
+	public static World getWorld() {
+		return world;
+	}
+	
+	public static Player getPlayer() {
+		return player;
+	}
+	
+	public static ArrayList<Cell> getCells() {
+		return cells;
 	}
 }

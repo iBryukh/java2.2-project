@@ -23,8 +23,9 @@ public class Player extends Sprite{
 	public Player(int type) {
 		super(doTexture(type));
 		this.setScale(50f / this.getWidth());
-		this.setPosition(Gdx.graphics.getWidth() / 2 - this.getWidth() / 2 + 65,
-				Gdx.graphics.getHeight() / 2 - this.getHeight() / 2 + 65);
+		this.setPosition(//Gdx.graphics.getWidth() / 2 - this.getWidth() / 2 + 65,
+		//		Gdx.graphics.getHeight() / 2 - this.getHeight() / 2 + 65);
+		25,25);
 		
 		BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -69,6 +70,10 @@ public class Player extends Sprite{
 	
 	public Body getBody() {
 		return body;
+	}
+	
+	public ArrayList<Bullet> getBullets() {
+		return bullets;
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -48,5 +50,18 @@ public class Bullet extends Sprite {
 				this.getY() < 0 || this.getY() > Gdx.graphics.getHeight())
 			return true;
 		return false;
+	}
+	
+	public void collide() {
+		ArrayList<Cell> arr = MyGdxGame.getCells();
+		for (int i =0; i < arr.size(); ++i) {
+			if (arr.get(i).getBoundingRectangle().overlaps(getBoundingRectangle())) {
+				if (arr.get(i).getType()!=3) {
+					arr.get(i).hit();
+					MyGdxGame.getPlayer().getBullets().remove(this);
+				}
+				break;
+			}
+		}
 	}
 }
