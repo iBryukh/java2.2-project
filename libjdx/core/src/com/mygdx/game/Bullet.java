@@ -64,4 +64,8 @@ public class Bullet extends Sprite {
 			}
 		}
 	}
+	
+	public BulletData getData () {
+		return new BulletData((int)getX(), (int)getY());
+	}
 }

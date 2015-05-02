@@ -76,4 +76,10 @@ public class Player extends Sprite{
 		return bullets;
 	}
 	
+	public PlayerData getData () {
+		ArrayList<BulletData> arr = new ArrayList<BulletData>();
+		for (Bullet b:bullets) arr.add(b.getData());
+		return new PlayerData((int)getX(), (int)getY(), (int)getRotation(), arr);
+	}
+	
 }

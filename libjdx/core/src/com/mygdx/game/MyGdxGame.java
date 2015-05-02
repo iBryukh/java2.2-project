@@ -155,6 +155,12 @@ public class MyGdxGame extends ApplicationAdapter {
         
 	}
 	
+	public Data getData () {
+		ArrayList<CellData> arr = new ArrayList<CellData>();
+		for (Cell c:cells) arr.add(c.getData());
+		return new Data (player.getData(), arr);
+	}
+	
 	public static World getWorld() {
 		return world;
 	}
@@ -166,4 +172,5 @@ public class MyGdxGame extends ApplicationAdapter {
 	public static ArrayList<Cell> getCells() {
 		return cells;
 	}
+
 }

@@ -12,12 +12,15 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Cell extends Sprite {
 
+	private static int staticId = 0;
+	private int id;
 	private int type;
 	private Body body;
 	private int health;
 	
 	public Cell(float x, float y, int type) {
 		super(doTexture(type));
+		this.id = staticId++;
 		this.type = type;
 		this.health = 3;
 		
@@ -60,5 +63,13 @@ public class Cell extends Sprite {
 
 	public int getType() {
 		return type;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public CellData getData () {
+		return new CellData(id, health);
 	}
 }
