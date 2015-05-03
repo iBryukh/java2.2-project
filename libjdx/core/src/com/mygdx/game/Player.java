@@ -20,19 +20,20 @@ public class Player extends Sprite{
 	private ArrayList<Bullet> bullets;
 	private Body body;
 
-	public Player(int type) {
+	public Player(int type, int x, int y, int angle) {
 		super(doTexture(type));
-		this.setScale(50f / this.getWidth());
+		this.setScale(40f / this.getWidth());
 		this.setPosition(//Gdx.graphics.getWidth() / 2 - this.getWidth() / 2 + 65,
 		//		Gdx.graphics.getHeight() / 2 - this.getHeight() / 2 + 65);
-		25,25);
+		x, y);
+		this.setRotation(angle);
 		
 		BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(getX()/PIXS_IN_METER, getY()/PIXS_IN_METER);
+        bodyDef.type = (type == 0) ? BodyDef.BodyType.DynamicBody : BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(getX()/PIXS_IN_METER + 2, getY()/PIXS_IN_METER + 2);
         body = getWorld().createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(25f/PIXS_IN_METER, 25f/PIXS_IN_METER);
+        shape.setAsBox(20f/PIXS_IN_METER, 20f/PIXS_IN_METER);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
@@ -43,7 +44,7 @@ public class Player extends Sprite{
 	}
 	
 	public Player () {
-		this (0);
+		this (0, 25, 25, 0);
 	}
 
 	public void addBullet (Bullet b) {

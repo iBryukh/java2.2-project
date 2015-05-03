@@ -11,15 +11,21 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Bullet extends Sprite {
 
+	private Player player;
 	private int speedX;
 	private int speedY;
 	private static Texture texture;
 	
-	public Bullet(float x, float y, int speedX, int speedY) {
+	public Bullet(Player player, float x, float y, int speedX, int speedY) {
 		super (doTexture());
 		this.speedX = speedX;
 		this.speedY = speedY;
 		this.setPosition(x, y);
+		this.player = player;
+	}
+	
+	public Bullet (float x, float y, int speedX, int speedY) {
+		this (MyGdxGame.getPlayer(), x, y, speedX, speedY);
 	}
 	
 	private static Texture doTexture() {
@@ -52,20 +58,30 @@ public class Bullet extends Sprite {
 		return false;
 	}
 	
-	public void collide() {
+	public boolean collide() {
 		ArrayList<Cell> arr = MyGdxGame.getCells();
 		for (int i =0; i < arr.size(); ++i) {
 			if (arr.get(i).getBoundingRectangle().overlaps(getBoundingRectangle())) {
 				if (arr.get(i).getType()!=3) {
 					arr.get(i).hit();
-					MyGdxGame.getPlayer().getBullets().remove(this);
+					player.getBullets().remove(this);
 				}
-				break;
+				return true;
 			}
 		}
+		return false;
+	}
+	
+	public boolean playerCollide () {
+		if (this.getBoundingRectangle().overlaps(MyGdxGame.getPlayer().getBoundingRectangle())) {
+			player.getBullets().remove(this);
+			MyGdxGame.gameOver();
+			return true;
+		}
+		return false;
 	}
 	
 	public BulletData getData () {
-		return new BulletData((int)getX(), (int)getY());
+		return new BulletData((int)getX(), (int)getY(), (int) speedX, (int) speedY);
 	}
 }

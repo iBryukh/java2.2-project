@@ -1,7 +1,7 @@
 package com.mygdx.game;
 
 import static com.mygdx.game.MyGdxGame.PIXS_IN_METER;
-import static com.mygdx.game.MyGdxGame.getWorld;
+import static com.mygdx.game.MyGdxGame.*;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -33,7 +33,7 @@ public class Cell extends Sprite {
 	        bodyDef.position.set(x/PIXS_IN_METER + 2.5f,y/PIXS_IN_METER + 2.5f);
 	        body = getWorld().createBody(bodyDef);
 	        PolygonShape shape = new PolygonShape();
-	        shape.setAsBox(24f/PIXS_IN_METER, 24f/PIXS_IN_METER);
+	        shape.setAsBox(25f/PIXS_IN_METER, 25f/PIXS_IN_METER);
 	        FixtureDef fixtureDef = new FixtureDef();
 	        fixtureDef.shape = shape;
 	        fixtureDef.density = 1f;
@@ -56,8 +56,8 @@ public class Cell extends Sprite {
 		if (type==2) return;
 		--health;
 		if (health <= 0) {
-			MyGdxGame.getWorld().destroyBody(body);
-			MyGdxGame.getCells().remove(this);
+			getWorld().destroyBody(body);
+			getCells().remove(this);
 		}
 	}
 
@@ -69,7 +69,4 @@ public class Cell extends Sprite {
 		return id;
 	}
 	
-	public CellData getData () {
-		return new CellData(id, health);
-	}
 }

@@ -26,10 +26,12 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Box2DDebugRenderer debugRenderer;
 	private Matrix4 debugMatrix;
 	private OrthographicCamera camera;
+	private ServerConnector connector;
 	private static ArrayList<Cell> cells;
 	
 	@Override
 	public void create() {
+		connector = new ServerConnector();
 		batch = new SpriteBatch();
 		player = new Player();
 		
@@ -79,7 +81,7 @@ public class MyGdxGame extends ApplicationAdapter {
 				speedX = -10;
 				break;
 			}
-			Bullet b = new Bullet(player.getBoundingRectangle().x+23, player.getBoundingRectangle().y+23, speedX, speedY);
+			Bullet b = new Bullet(player.getBoundingRectangle().x+18, player.getBoundingRectangle().y+18, speedX, speedY);
 			player.addBullet(b);
 		}
 		
@@ -87,8 +89,17 @@ public class MyGdxGame extends ApplicationAdapter {
 		debugMatrix = batch.getProjectionMatrix().cpy().scale(10,10, 0);
 		debugRenderer.render(world, debugMatrix);
 		batch.begin();
-		player.setPosition(player.getBody().getPosition().x*10-64, player.getBody().getPosition().y*10-64);
+		player.setPosition(player.getBody().getPosition().x*10-20, player.getBody().getPosition().y*10-20);
 		player.draw(batch);
+		ArrayList<Player> arr = connector.getEnemies();
+		for (Player p: arr) {
+			p.setPosition(p.getBody().getPosition().x*10-20, p.getBody().getPosition().y*10-20);
+			p.draw(batch);
+			for (int i = 0; i < p.getBullets().size(); ++i) {
+				if (!p.getBullets().get(i).collide())
+					p.getBullets().get(i).playerCollide();
+			}
+		}
 		for (Cell c:cells) c.draw(batch);
 		for (int i = 0; i < player.getBullets().size(); ++i) player.getBullets().get(i).collide();
 		batch.end();
@@ -155,12 +166,6 @@ public class MyGdxGame extends ApplicationAdapter {
         
 	}
 	
-	public Data getData () {
-		ArrayList<CellData> arr = new ArrayList<CellData>();
-		for (Cell c:cells) arr.add(c.getData());
-		return new Data (player.getData(), arr);
-	}
-	
 	public static World getWorld() {
 		return world;
 	}
@@ -171,6 +176,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	public static ArrayList<Cell> getCells() {
 		return cells;
+	}
+
+	public static void gameOver() {
+		//todo
+		player.setAlpha(0);
 	}
 
 }
