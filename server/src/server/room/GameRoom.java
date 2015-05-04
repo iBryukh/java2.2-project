@@ -24,9 +24,11 @@ public class GameRoom extends Thread {
 
 	@Override
 	public void run() {
-		System.out.println("run");
 		while (true) {
-			//System.out.println(players.size());
+			for(int i = 0; i < players.size(); ++i)
+				if(!players.get(i).isConnected())
+					players.remove(i);
+			
 			for(int i = 0; i < players.size(); ++i){
 				players.get(i).get();
 				players.get(i).update();

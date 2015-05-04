@@ -6,7 +6,7 @@ import java.util.*;
 
 import multiplayer.transfer.*;
 
-public class Client extends Thread{
+public class Client extends Thread {
 	private Socket socket;
 	private ObjectInputStream objectIS;
 	private ObjectOutputStream objectOS;
@@ -22,11 +22,24 @@ public class Client extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
-	public void run(){
+
+	public void disconnect() {
+		try {
+			if (socket != null)
+				socket.close();
+			if (objectIS != null)
+				objectIS.close();
+			if (objectOS != null)
+				objectOS.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void run() {
 		play();
 	}
-	
+
 	public void send(TransferData td) {
 		try {
 			objectOS.writeObject(td);

@@ -11,6 +11,7 @@ public class Player {
 	private ObjectInputStream objectIS;
 	private ObjectOutputStream objectOS;
 	private TransferData td;
+	private boolean connected;
 
 	public Player(Socket s) {
 		try {
@@ -18,11 +19,30 @@ public class Player {
 			objectOS = new ObjectOutputStream(socket.getOutputStream());
 			objectOS.flush();
 			objectIS = new ObjectInputStream(socket.getInputStream());
+			connected = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public boolean isConnected(){
+		return connected;
+	}
+	
+	public void disconnect(){
+		try {
+			if (socket != null)
+				socket.close();
+			if (objectIS != null)
+				objectIS.close();
+			if (objectOS != null)
+				objectOS.close();
+			connected = false;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void send(ArrayList<Player> players) {
 		try {
 			ArrayList<TransferData> list = new ArrayList<>();
