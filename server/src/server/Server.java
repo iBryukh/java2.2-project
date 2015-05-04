@@ -7,19 +7,32 @@ import server.room.GameRoom;
 
 public class Server {
 
-	public static final int MAIN_SERVER_PORT = 7999;
+	private ServerSocket serverSocket;
 
-	public static void main(String args[]) {
+	public Server(int port) {
 		try {
-			ServerSocket serverSocket = new ServerSocket(MAIN_SERVER_PORT);
-			GameRoom gameRoom = new GameRoom();
-			gameRoom.start();
-			Socket socket = serverSocket.accept();
-			gameRoom.add(socket);
-			serverSocket.close();
+			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void run() {
+		try {
+			GameRoom gameRoom = new GameRoom();
+			gameRoom.start();
+			while (true) {
+				Socket socket = serverSocket.accept();
+				gameRoom.add(socket);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String args[]) {
+		Server server = new Server(7000);
+		server.run();
 	}
 
 }

@@ -1,29 +1,41 @@
 package server.room;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-import server.player.Player;
+import multiplayer.transfer.Coordinates;
+import multiplayer.transfer.TransferData;
+import server.player.*;
 
 public class GameRoom extends Thread {
-	private List<Player> players;
-	public GameRoom(){
+	private ArrayList<Player> players;
+
+	public GameRoom() {
 		players = new ArrayList<Player>();
 	}
-	
-	public void add(Socket socket) throws IOException{
+
+	public void add(Socket socket) throws IOException {
 		synchronized (players) {
-			players.add(new Player(socket));	
+			if (players.size() < 5)
+				players.add(new Player(socket));
 		}
 	}
-	
+
 	@Override
 	public void run() {
-		while(true){
+		System.out.println("run");
+		while (true) {
+			//System.out.println(players.size());
+			for(int i = 0; i < players.size(); ++i){
+				players.get(i).get();
+				players.get(i).update();
+			}
+			for(int i = 0; i < players.size(); ++i){
+				players.get(i).send(players);
+			}
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
