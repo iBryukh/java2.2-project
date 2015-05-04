@@ -17,7 +17,7 @@ public class ServerConnector {
 	
 	//dummy
 	public ArrayList<Player> getEnemies() {
-		if (Math.random() < 0.02) players.get(1).addBullet(new Bullet(players.get(1), players.get(1).getBoundingRectangle().x+18, players.get(1).getBoundingRectangle().y+18, 10, 0));
+		//if (Math.random() < 0.02) players.get(1).addBullet(new Bullet(players.get(1), players.get(1).getBoundingRectangle().x+18, players.get(1).getBoundingRectangle().y+18, 10, 0));
 		return players;
 	}
 

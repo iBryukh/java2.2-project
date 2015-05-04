@@ -7,7 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -26,7 +29,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Box2DDebugRenderer debugRenderer;
 	private Matrix4 debugMatrix;
 	private OrthographicCamera camera;
-	private ServerConnector connector;
+	private static ServerConnector connector;
 	private static ArrayList<Cell> cells;
 	
 	@Override
@@ -178,6 +181,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		return cells;
 	}
 
+	public static ServerConnector getConnector() {
+		return connector;
+	}
+	
 	public static void gameOver() {
 		//todo
 		player.setAlpha(0);

@@ -60,13 +60,22 @@ public class Bullet extends Sprite {
 	
 	public boolean collide() {
 		ArrayList<Cell> arr = MyGdxGame.getCells();
-		for (int i =0; i < arr.size(); ++i) {
+		for (int i = 0; i < arr.size(); ++i) {
 			if (arr.get(i).getBoundingRectangle().overlaps(getBoundingRectangle())) {
 				if (arr.get(i).getType()!=3) {
 					arr.get(i).hit();
 					player.getBullets().remove(this);
 				}
 				return true;
+			}
+		}
+		ArrayList<Player> arr2 = MyGdxGame.getConnector().getEnemies();
+		for (int i = 0; i < arr2.size(); ++i) {
+			if (arr2.get(i).getBoundingRectangle().overlaps(getBoundingRectangle())) {
+				if (player == MyGdxGame.getPlayer()) {
+					player.getBullets().remove(this);
+					return true;
+				}
 			}
 		}
 		return false;

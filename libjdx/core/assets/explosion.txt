@@ -1,0 +1,39 @@
+explosion.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+explosion
+  rotate: false
+  xy: 2, 2
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: 1
+explosion
+  rotate: false
+  xy: 15, 2
+  size: 15, 14
+  orig: 15, 14
+  offset: 0, 0
+  index: 2
+explosion
+  rotate: false
+  xy: 32, 2
+  size: 17, 16
+  orig: 17, 16
+  offset: 0, 0
+  index: 3
+explosion
+  rotate: false
+  xy: 51, 2
+  size: 30, 29
+  orig: 30, 29
+  offset: 0, 0
+  index: 4
+explosion
+  rotate: false
+  xy: 83, 2
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 5
