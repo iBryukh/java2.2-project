@@ -6,7 +6,7 @@ import java.util.*;
 
 import multiplayer.transfer.*;
 
-public class Client extends Thread {
+public class Client {
 	private Socket socket;
 	private ObjectInputStream objectIS;
 	private ObjectOutputStream objectOS;
@@ -17,7 +17,6 @@ public class Client extends Thread {
 			objectOS = new ObjectOutputStream(socket.getOutputStream());
 			objectOS.flush();
 			objectIS = new ObjectInputStream(socket.getInputStream());
-			start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -36,10 +35,6 @@ public class Client extends Thread {
 		}
 	}
 
-	public void run() {
-		play();
-	}
-
 	public void send(TransferData td) {
 		try {
 			objectOS.writeObject(td);
@@ -55,19 +50,5 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	private void play() {
-		Coordinates c = new Coordinates(1, 1);
-		while (true) {
-			send(c);
-			c = (Coordinates) get().get(0);
-			System.out.println(c.x);
-		}
-	}
-
-	public static void main(String[] args) throws UnknownHostException {
-		new Client(InetAddress.getByName(null), 7000);
-		new Client(InetAddress.getByName(null), 7000);
 	}
 }
