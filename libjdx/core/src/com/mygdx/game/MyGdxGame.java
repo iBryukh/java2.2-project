@@ -1,16 +1,18 @@
 package com.mygdx.game;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+
+import multiplayer.transfer.Coordinates;
+import client.Client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -48,6 +50,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render() {
+		connector.send(player.getData());
 		camera.update();
 		world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 		Gdx.gl.glClearColor(0, 0, 0, 0);

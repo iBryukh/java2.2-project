@@ -23,9 +23,7 @@ public class Player extends Sprite{
 	public Player(int type, int x, int y, int angle) {
 		super(doTexture(type));
 		this.setScale(40f / this.getWidth());
-		this.setPosition(//Gdx.graphics.getWidth() / 2 - this.getWidth() / 2 + 65,
-		//		Gdx.graphics.getHeight() / 2 - this.getHeight() / 2 + 65);
-		x, y);
+		this.setPosition(x, y);
 		this.setRotation(angle);
 		
 		BodyDef bodyDef = new BodyDef();
@@ -46,7 +44,7 @@ public class Player extends Sprite{
 	public Player () {
 		this (0, 25, 25, 0);
 	}
-
+	
 	public void addBullet (Bullet b) {
 		bullets.add(b);
 	}
@@ -79,8 +77,13 @@ public class Player extends Sprite{
 	
 	public PlayerData getData () {
 		ArrayList<BulletData> arr = new ArrayList<BulletData>();
-		for (Bullet b:bullets) arr.add(b.getData());
-		return new PlayerData((int)getX(), (int)getY(), (int)getRotation(), arr);
+		//for (Bullet b:bullets) arr.add(b.getData());
+		return new PlayerData(body.getPosition().x, body.getPosition().y, (int)getRotation(), arr);
+	}
+
+	public void update(float x, float y, int angle) {
+		body.setTransform(new Vector2(x, y), 0);
+		this.setRotation(angle);
 	}
 	
 }

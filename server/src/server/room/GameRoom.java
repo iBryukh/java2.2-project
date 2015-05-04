@@ -37,7 +37,7 @@ public class GameRoom extends Thread {
 				players.get(i).send(players);
 			}
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1000/60);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

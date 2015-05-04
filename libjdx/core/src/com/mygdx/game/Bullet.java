@@ -68,7 +68,7 @@ public class Bullet extends Sprite {
 				}
 				return true;
 			}
-		}
+		}/*
 		ArrayList<Player> arr2 = MyGdxGame.getConnector().getEnemies();
 		for (int i = 0; i < arr2.size(); ++i) {
 			if (arr2.get(i).getBoundingRectangle().overlaps(getBoundingRectangle())) {
@@ -77,7 +77,7 @@ public class Bullet extends Sprite {
 					return true;
 				}
 			}
-		}
+		}*/
 		return false;
 	}
 	
