@@ -1,13 +1,9 @@
 package server;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import server.thread.GameRoom;
-import transfer.Coordinates;
+import server.room.GameRoom;
 
 public class Server {
 
