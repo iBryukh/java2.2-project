@@ -15,6 +15,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.mygdx.game.transfer.BulletData;
+import com.mygdx.game.transfer.CellData;
+import com.mygdx.game.transfer.Data;
+import com.mygdx.game.transfer.PlayerData;
 
 public class Player extends Sprite{
 
@@ -91,13 +95,16 @@ public class Player extends Sprite{
 		return bullets;
 	}
 	
-	public PlayerData getData () {
+	public Data getData () {
 		ArrayList<BulletData> arr = new ArrayList<BulletData>();
 		if (newBullets.size() > 0) {
 			arr.add(newBullets.get(0).getData());
 			newBullets.remove(0);
 		}
-		return new PlayerData(body.getPosition().x, body.getPosition().y, (int)getRotation(), arr);//, new HashMap<Integer, CellData>()); /*Cell.getCellDatas(MyGdxGame.getCells()));*/
+		PlayerData pdata = new PlayerData(body.getPosition().x, body.getPosition().y, (int)getRotation(), arr);//, new HashMap<Integer, CellData>()); /*Cell.getCellDatas(MyGdxGame.getCells()));*/
+		HashMap<Integer, CellData> map = new HashMap<Integer, CellData>();
+		map.put(0, new CellData(0, 2, 1));
+		return new Data (pdata, map);
 	}
 
 	public void update(float x, float y, int angle, BulletData bullet) {

@@ -44,7 +44,7 @@ public class Player {
 		try {
 			for(int i = 0; i < data.getPlayers().size(); ++i){
 				if(data.getPlayers().get(i) == this.data.getPlayers().get(0)){
-					data.getPlayers().remove(i);
+					//data.getPlayers().remove(i);
 					break;
 				}
 			}

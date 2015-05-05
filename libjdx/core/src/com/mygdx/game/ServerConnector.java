@@ -4,8 +4,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import multiplayer.transfer.Coordinates;
-import multiplayer.transfer.TransferData;
+import com.mygdx.game.transfer.Data;
+import com.mygdx.game.transfer.PlayerData;
+
 import client.Client;
 
 public class ServerConnector {
@@ -22,18 +23,20 @@ public class ServerConnector {
 	}
 	
 	
-	public void send(TransferData td) {
+	public void send(Data td) {
 		client.send(td);
 	}
 
 	public ArrayList<Player> getEnemies() {
-		ArrayList <PlayerData>  c = client.get();
+		Data data = client.get();
+		ArrayList <PlayerData>  c = data.getPlayers();
 		if (c!=null && c.size() > 0) {
 			for (int i = 0; i < c.size(); ++i) {
 				if (players.size()<c.size()) players.add(new Player(-100, -100, 0, 0));
 				if (players.size()>c.size()) players.remove(players.size()-1).destroy();
 				try {
-					players.get(i).update(c.get(i).getX(), c.get(i).getY(), c.get(i).getAngle(), (c.get(i).getBullets().size() > 0) ? c.get(i).getBullets().get(0) : null);
+					if (Math.abs(c.get(i).getX() - MyGdxGame.getPlayer().getBody().getPosition().x) >= 4 || Math.abs(c.get(i).getY() - MyGdxGame.getPlayer().getBody().getPosition().y) >= 4)
+						players.get(i).update(c.get(i).getX(), c.get(i).getY(), c.get(i).getAngle(), (c.get(i).getBullets().size() > 0) ? c.get(i).getBullets().get(0) : null);
 				}
 				catch (NullPointerException n) {
 					//TODO

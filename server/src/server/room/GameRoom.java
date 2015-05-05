@@ -54,6 +54,10 @@ public class GameRoom extends Thread {
 			for (int i = 0; i < players.size(); ++i)
 				if (!players.get(i).isConnected())
 					players.remove(i);
+			
+			for(int i = 0; i < players.size(); ++i)
+				players.get(i).get();
+				
 			Data toSend = dataToSend();
 			for (int i = 0; i < players.size(); ++i) {
 				players.get(i).send(toSend);

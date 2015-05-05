@@ -4,7 +4,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import multiplayer.transfer.Coordinates;
 import client.Client;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -21,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.transfer.Data;
 
 public class MyGdxGame extends ApplicationAdapter {
 	
