@@ -1,6 +1,8 @@
 package view;
 
 
+import java.io.File;
+
 import controller.ExitScreenEvents;
 import controller.PlayScreenEvents;
 import controller.SoundScreenEvents;
@@ -12,6 +14,8 @@ import javafx.scene.control.TextFieldBuilder;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -24,6 +28,8 @@ public class EnterScreen extends Application {
     public TextField ip = null;
     public ImageView screen = null;
 	public AnchorPane anPane=null;
+	public StackPane root=null;
+	public MediaPlayer mediaPlayer=null;
     
     @Override
     public void start(Stage primaryStage) throws Exception {   
@@ -31,11 +37,18 @@ public class EnterScreen extends Application {
         mainStage  = new  Stage(StageStyle.TRANSPARENT);  
        // mainStage  = new  Stage(); 
             
-        StackPane root = new StackPane();        
+        root = new StackPane();        
         screen = new ImageView(resManager.getEnterScreenBackground());        
         root.getChildren().add(screen);        
         anPane = new AnchorPane();        
-        root.getChildren().add(anPane);     
+        root.getChildren().add(anPane);   
+        
+        
+        String musicFile = "testSound.mp3";     // For example
+
+        Media sound = new Media(new File(musicFile).toURI().toString());
+        mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.play();
         
         nik =textField();
         ip = textField();
@@ -54,7 +67,7 @@ public class EnterScreen extends Application {
     
         ImageView exitButton =ExitScreenEvents.buttonExit(this);
         ImageView playButton = PlayScreenEvents.buttonPlay(this);
-        ImageView soundButton = SoundScreenEvents.buttonSound();
+        ImageView soundButton = SoundScreenEvents.buttonSound(this);
         
         AnchorPane.setLeftAnchor(exitButton,650.0);
         AnchorPane.setTopAnchor(exitButton, 7.0); 

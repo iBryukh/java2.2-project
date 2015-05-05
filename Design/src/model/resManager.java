@@ -31,8 +31,8 @@ public class resManager {
 		return new Image("pict/SoundButtonImage.png");
 	}
 
-	public static Image getSNBI() {
-		return new Image("pict/SoundNotButtonImage.png");
+	public static Image getSNPBI() {
+		return new Image("pict/SoundNotPressedButtonImage.png");
 	}
 
 	public static Image getSPBI() {
