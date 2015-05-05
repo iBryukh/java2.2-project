@@ -43,7 +43,7 @@ public class ServerConnector {
 					System.out.println(c.get(i));
 				}
 			}
-			//Cell.updateCells(c.get(0).getCells());
+			Cell.updateCells(data.getCells());
 		}
 		return players;
 	}

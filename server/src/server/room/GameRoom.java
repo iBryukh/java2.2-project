@@ -64,7 +64,7 @@ public class GameRoom extends Thread {
 			}
 
 			try {
-				Thread.sleep(1000 / 60);
+				Thread.sleep(1000/60);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

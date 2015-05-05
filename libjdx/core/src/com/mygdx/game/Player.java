@@ -102,9 +102,7 @@ public class Player extends Sprite{
 			newBullets.remove(0);
 		}
 		PlayerData pdata = new PlayerData(body.getPosition().x, body.getPosition().y, (int)getRotation(), arr);//, new HashMap<Integer, CellData>()); /*Cell.getCellDatas(MyGdxGame.getCells()));*/
-		HashMap<Integer, CellData> map = new HashMap<Integer, CellData>();
-		map.put(0, new CellData(0, 2, 1));
-		return new Data (pdata, map);
+		return new Data (pdata, Cell.getUpdatedCells());
 	}
 
 	public void update(float x, float y, int angle, BulletData bullet) {

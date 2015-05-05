@@ -15,7 +15,7 @@ import com.mygdx.game.transfer.CellData;
 
 public class Cell extends Sprite {
 
-	private static HashMap<Integer, CellData> updatedCells;
+	private static HashMap<Integer, CellData> updatedCells = new HashMap<>();
 	private static int staticId = 0;
 	private int id;
 	private int type;
@@ -47,7 +47,7 @@ public class Cell extends Sprite {
 	}
 
 	public void update (int health) {
-		this.health = health;
+		if (this.health > health) this.health = health;
 		if (health <= 0 && body!=null) {
 			getWorld().destroyBody(body);
 			body = null;
@@ -67,11 +67,11 @@ public class Cell extends Sprite {
 	public void hit() {
 		if (type==2) return;
 		--health;
-		if (health <= 0) {
+		if (health <= 0 && body!=null) {
 			getWorld().destroyBody(body);
 			body = null;
-			//getCells().remove(this);
 		}
+		updatedCells.put(id, getData());
 	}
 	
 	public int getHealth() {
@@ -90,12 +90,14 @@ public class Cell extends Sprite {
 		return id;
 	}
 	
-	public static HashMap<Integer, CellData> getCellDatas (ArrayList<Cell> cells) {
-		HashMap<Integer, CellData> map = new HashMap<Integer, CellData>();
-		for (Cell c:cells) {
-			map.put(c.getId(), new CellData(c.getId(), c.getHealth(), c.getType()));
-		}
-		return map;
+	public CellData getData () {
+		return new CellData(id, health, type);
+	}
+	
+	public static HashMap<Integer, CellData> getUpdatedCells () {
+		HashMap<Integer, CellData> temp = (HashMap<Integer, CellData>) updatedCells.clone();
+		updatedCells.clear();
+		return temp;
 	}
 	
 	public static void updateCells (HashMap<Integer, CellData> map) {
@@ -106,5 +108,4 @@ public class Cell extends Sprite {
 				c.update(d.getState());
 		}
 	}
-	
 }

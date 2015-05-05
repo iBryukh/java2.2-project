@@ -43,7 +43,7 @@ public class Player {
 	public void send(Data data) {
 		try {
 			for(int i = 0; i < data.getPlayers().size(); ++i){
-				if(data.getPlayers().get(i) == this.data.getPlayers().get(0)){
+				if(this.data != null && data.getPlayers().get(i) == this.data.getPlayers().get(0)){
 					//data.getPlayers().remove(i);
 					break;
 				}

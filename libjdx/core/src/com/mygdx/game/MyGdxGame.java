@@ -92,8 +92,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		
 		batch.setProjectionMatrix(camera.combined);
-		debugMatrix = batch.getProjectionMatrix().cpy().scale(10,10, 0);
-		debugRenderer.render(world, debugMatrix);
+		//debugMatrix = batch.getProjectionMatrix().cpy().scale(10,10, 0);
+		//debugRenderer.render(world, debugMatrix);
 		batch.begin();
 		player.setPosition(player.getBody().getPosition().x*10-20, player.getBody().getPosition().y*10-20);
 		player.draw(batch);
