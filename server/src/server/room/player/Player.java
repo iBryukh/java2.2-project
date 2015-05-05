@@ -1,16 +1,15 @@
-package server.player;
+package server.room.player;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
-import multiplayer.transfer.*;
+import com.mygdx.game.transfer.*;
 
 public class Player {
 	private Socket socket;
 	private ObjectInputStream objectIS;
 	private ObjectOutputStream objectOS;
-	private TransferData td;
+	private Data data;
 	private boolean connected;
 
 	public Player(Socket s) {
@@ -41,29 +40,29 @@ public class Player {
 		} catch (IOException e) { }
 	}
 	
-	public void send(ArrayList<Player> players) {
+	public void send(Data data) {
 		try {
-			
-			ArrayList<TransferData> list = new ArrayList<>();
-			for (int i = 0; i < players.size(); ++i)
-				if(this != players.get(i))
-					list.add(players.get(i).td);
-			//System.out.println("size: "+list.size());
-			objectOS.writeObject(list);
+			for(int i = 0; i < data.getPlayers().size(); ++i){
+				if(data.getPlayers().get(i) == this.data.getPlayers().get(0)){
+					data.getPlayers().remove(i);
+					break;
+				}
+			}
+			objectOS.writeObject(data);
 		} catch (IOException e) {
 			disconnect();
 		}
 	}
-
+	
 	public void get() {
 		try {
-			td = (TransferData) (objectIS.readObject());
+			data = (Data) (objectIS.readObject());
 		} catch (IOException | ClassNotFoundException e) {
 			disconnect();
 		}
 	}
-
-	public void update() {
-		td.update();
+	
+	public Data getData(){
+		return data;
 	}
 }
