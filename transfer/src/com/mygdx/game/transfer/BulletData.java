@@ -1,8 +1,6 @@
-package com.mygdx.game;
+package com.mygdx.game.transfer;
 
-import java.io.Serializable;
-
-public class BulletData implements Serializable{
+public class BulletData implements TransferData{
 
 	private static final long serialVersionUID = -4105411395536190427L;
 	private int x;

@@ -1,10 +1,6 @@
-package com.mygdx.game;
+package com.mygdx.game.transfer;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import multiplayer.transfer.TransferData;
 
 public class PlayerData implements TransferData{
 
@@ -45,18 +41,6 @@ public class PlayerData implements TransferData{
 
 	public float getY() {
 		return y;
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getID() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

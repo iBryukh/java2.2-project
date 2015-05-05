@@ -1,9 +1,7 @@
-package com.mygdx.game;
+package com.mygdx.game.transfer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import multiplayer.transfer.TransferData;
 
 public class Data implements TransferData{
 
@@ -36,18 +34,6 @@ public class Data implements TransferData{
 
 	public void setPlayers(ArrayList<PlayerData> players) {
 		this.players = players;
-	}
-
-	@Override
-	public int getID() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

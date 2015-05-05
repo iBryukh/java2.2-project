@@ -1,10 +1,15 @@
 package client;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 
-import multiplayer.transfer.*;
+import com.mygdx.game.transfer.TransferData;
+
 
 public class Client {
 	public static final int DEFAULT_PORT = 7000;
@@ -72,6 +77,7 @@ public class Client {
 
 	public static void main(String[] args) throws UnknownHostException {
 		Client c = new Client();
+		/*
 		Coordinates q = new Coordinates(1, 1);
 		while (c.isConnected()) {
 			c.send(q);
@@ -80,5 +86,6 @@ public class Client {
 			
 			System.out.println(1);
 		}
+		*/
 	}
 }
