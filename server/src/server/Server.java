@@ -77,27 +77,14 @@ public class Server extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (gameRoom != null && gameRoom.isAlive()) {
-					gameRoom.destroyGame();
-					if (runServer != null && runServer.isAlive())
-						runServer.interrupt();
-					if (serverSocket != null && !serverSocket.isClosed())
-						try {
-							serverSocket.close();
-						} catch (IOException e) {
-						}
-					gameRoom = null;
-					runServer = null;
-					serverSocket = null;
-				}
+				stopServer();
 			}
 		});
 		addWindowListener(new WindowListener() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if (runServer != null && runServer.isAlive())
-					runServer.interrupt();
+				stopServer();
 			}
 
 			@Override
@@ -143,6 +130,22 @@ public class Server extends JFrame {
 		runServer.start();
 	}
 
+	private void stopServer(){
+		if (gameRoom != null && gameRoom.isAlive()) {
+			gameRoom.destroyGame();
+			if (runServer != null && runServer.isAlive())
+				runServer.interrupt();
+			if (serverSocket != null && !serverSocket.isClosed())
+				try {
+					serverSocket.close();
+				} catch (IOException e) {
+				}
+			gameRoom = null;
+			runServer = null;
+			serverSocket = null;
+		}
+	}
+	
 	public static void main(String[] args) {
 		new Server();
 	}

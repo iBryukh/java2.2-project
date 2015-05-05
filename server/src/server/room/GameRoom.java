@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import multiplayer.transfer.Coordinates;
-import multiplayer.transfer.TransferData;
 import server.player.*;
 
 public class GameRoom extends Thread {
@@ -16,7 +14,10 @@ public class GameRoom extends Thread {
 	}
 
 	public void destroyGame(){
-		
+		for(int i = 0; i < players.size(); ++i){
+			players.get(i).disconnect();
+		}
+		players = null;
 	}
 	
 	public void add(Socket socket) throws IOException {

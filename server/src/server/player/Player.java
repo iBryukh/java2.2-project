@@ -50,7 +50,7 @@ public class Player {
 				list.add(players.get(i).td);
 			objectOS.writeObject(list);
 		} catch (IOException e) {
-			e.printStackTrace();
+			disconnect();
 		}
 	}
 
@@ -58,7 +58,7 @@ public class Player {
 		try {
 			td = (TransferData) (objectIS.readObject());
 		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+			disconnect();
 		}
 	}
 
