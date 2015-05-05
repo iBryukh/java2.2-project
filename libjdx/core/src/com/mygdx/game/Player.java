@@ -97,7 +97,7 @@ public class Player extends Sprite{
 			arr.add(newBullets.get(0).getData());
 			newBullets.remove(0);
 		}
-		return new PlayerData(body.getPosition().x, body.getPosition().y, (int)getRotation(), arr, new HashMap<Integer, CellData>()); /*Cell.getCellDatas(MyGdxGame.getCells()));*/
+		return new PlayerData(body.getPosition().x, body.getPosition().y, (int)getRotation(), arr);//, new HashMap<Integer, CellData>()); /*Cell.getCellDatas(MyGdxGame.getCells()));*/
 	}
 
 	public void update(float x, float y, int angle, BulletData bullet) {
