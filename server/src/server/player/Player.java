@@ -48,7 +48,7 @@ public class Player {
 			for (int i = 0; i < players.size(); ++i)
 				if(this != players.get(i))
 					list.add(players.get(i).td);
-			System.out.println("size: "+list.size());
+			//System.out.println("size: "+list.size());
 			objectOS.writeObject(list);
 		} catch (IOException e) {
 			disconnect();

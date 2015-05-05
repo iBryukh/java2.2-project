@@ -25,7 +25,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class MyGdxGame extends ApplicationAdapter {
 	
 	public static final int PIXS_IN_METER = 10;
-	private static World world = new World(new Vector2(), true);;
+	private static World world = new World(new Vector2(), true);
 	private SpriteBatch batch;
 	private static Player player;
 	private Box2DDebugRenderer debugRenderer;
@@ -106,7 +106,7 @@ public class MyGdxGame extends ApplicationAdapter {
 					p.getBullets().get(i).playerCollide();
 			}
 		}
-		for (Cell c:cells) c.draw(batch);
+		for (Cell c:cells) if (c.isAlive()) c.draw(batch);
 		for (int i = 0; i < player.getBullets().size(); ++i) player.getBullets().get(i).collide();
 		batch.end();
 	}

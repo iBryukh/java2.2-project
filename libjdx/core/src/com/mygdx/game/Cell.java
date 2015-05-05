@@ -1,7 +1,9 @@
 package com.mygdx.game;
 
-import static com.mygdx.game.MyGdxGame.PIXS_IN_METER;
 import static com.mygdx.game.MyGdxGame.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Cell extends Sprite {
 
+	private static HashMap<Integer, CellData> updatedCells;
 	private static int staticId = 0;
 	private int id;
 	private int type;
@@ -42,6 +45,14 @@ public class Cell extends Sprite {
 		}
 	}
 
+	public void update (int health) {
+		this.health = health;
+		if (health <= 0 && body!=null) {
+			getWorld().destroyBody(body);
+			body = null;
+		}
+	}
+	
 	private static Texture doTexture (int type) {
 		if (type==1) return new Texture("wall.png");
 		if (type==2) return new Texture("wall2.png");
@@ -57,8 +68,17 @@ public class Cell extends Sprite {
 		--health;
 		if (health <= 0) {
 			getWorld().destroyBody(body);
-			getCells().remove(this);
+			body = null;
+			//getCells().remove(this);
 		}
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+
+	public boolean isAlive() {
+		return health>0;
 	}
 
 	public int getType() {
@@ -67,6 +87,23 @@ public class Cell extends Sprite {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public static HashMap<Integer, CellData> getCellDatas (ArrayList<Cell> cells) {
+		HashMap<Integer, CellData> map = new HashMap<Integer, CellData>();
+		for (Cell c:cells) {
+			map.put(c.getId(), new CellData(c.getId(), c.getHealth(), c.getType()));
+		}
+		return map;
+	}
+	
+	public static void updateCells (HashMap<Integer, CellData> map) {
+		ArrayList<Cell> arr = MyGdxGame.getCells();
+		for (Cell c:arr) {
+			CellData d = map.get(c.getId());
+			if (d!=null)
+				c.update(d.getState());
+		}
 	}
 	
 }

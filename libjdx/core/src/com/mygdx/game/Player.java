@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.mygdx.game.MyGdxGame.*;
 
@@ -17,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Player extends Sprite{
 
+	private ArrayList<Bullet> newBullets;
 	private ArrayList<Bullet> bullets;
 	private Body body;
 
@@ -39,6 +41,7 @@ public class Player extends Sprite{
         body.setFixedRotation(true);
 
 		bullets = new ArrayList<Bullet>();
+		newBullets = new ArrayList<Bullet>();
 	}
 	
 	public Player () {
@@ -47,6 +50,19 @@ public class Player extends Sprite{
 	
 	public void addBullet (Bullet b) {
 		bullets.add(b);
+		newBullets.add(b);
+	}
+	
+	public void destroy () {
+		if (body!=null) {
+			try {
+				getWorld().destroyBody(body);
+				body = null;
+				this.finalize();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private static Texture doTexture (int type) {
@@ -77,13 +93,17 @@ public class Player extends Sprite{
 	
 	public PlayerData getData () {
 		ArrayList<BulletData> arr = new ArrayList<BulletData>();
-		//for (Bullet b:bullets) arr.add(b.getData());
-		return new PlayerData(body.getPosition().x, body.getPosition().y, (int)getRotation(), arr);
+		if (newBullets.size() > 0) {
+			arr.add(newBullets.get(0).getData());
+			newBullets.remove(0);
+		}
+		return new PlayerData(body.getPosition().x, body.getPosition().y, (int)getRotation(), arr, new HashMap<Integer, CellData>()); /*Cell.getCellDatas(MyGdxGame.getCells()));*/
 	}
 
-	public void update(float x, float y, int angle) {
+	public void update(float x, float y, int angle, BulletData bullet) {
 		body.setTransform(new Vector2(x, y), 0);
 		this.setRotation(angle);
+		if (bullet != null) addBullet(new Bullet(this, bullet.getX(), bullet.getY(), bullet.getSpeedX(), bullet.getSpeedY()));
 	}
 	
 }
