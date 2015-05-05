@@ -4,19 +4,26 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import multiplayer.transfer.Coordinates;
-import multiplayer.transfer.TransferData;
 import server.player.*;
 
 public class GameRoom extends Thread {
 	private ArrayList<Player> players;
+	private boolean running;
 
 	public GameRoom() {
 		players = new ArrayList<Player>();
+		running = true;
 	}
 
 	public void destroyGame(){
-		
+		synchronized (players) {
+			for(int i = 0; i < players.size(); ++i){
+				players.get(i).disconnect();
+				players.remove(i);
+			}
+			running = false;
+			Thread.currentThread().interrupt();
+		}
 	}
 	
 	public void add(Socket socket) throws IOException {
@@ -28,7 +35,7 @@ public class GameRoom extends Thread {
 
 	@Override
 	public void run() {
-		while (true) {
+		while (running) {
 			for(int i = 0; i < players.size(); ++i)
 				if(!players.get(i).isConnected())
 					players.remove(i);
@@ -40,11 +47,13 @@ public class GameRoom extends Thread {
 			for(int i = 0; i < players.size(); ++i){
 				players.get(i).send(players);
 			}
+			
 			try {
 				Thread.sleep(1000/60);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
 		}
 	}
 

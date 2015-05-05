@@ -1,6 +1,7 @@
 package server;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,7 @@ public class Server extends JFrame {
 	private GameRoom gameRoom;
 
 	public Server() {
+		super("Server(status: stopped)");
 		setLayout(new GridLayout(3, 1));
 		final JTextField portF = new JTextField();
 		add(portF);
@@ -37,37 +39,15 @@ public class Server extends JFrame {
 				if (gameRoom == null) {
 					try {
 						int port = Integer.valueOf(portF.getText());
+						messageFrame("Info", "Server runs on port: " + port);
+						setTitle("Server(status: running)");
 						run(port);
 					} catch (Exception e) {
-						JFrame error = new JFrame("Error");
-						error.setLayout(new BorderLayout());
-						JLabel label = new JLabel(
-								"invalid port number",
-								SwingConstants.CENTER);
-						error.add(label, BorderLayout.CENTER);
-						error.setSize(150, 100);
-						error.setVisible(true);
-						error.setResizable(false);
-						Point mainFrameLocation = getLocation();
-						mainFrameLocation.x += 30;
-						mainFrameLocation.y += 30;
-						error.setLocation(mainFrameLocation);
+						messageFrame("Error", "Invalid port number");
 						portF.setText("");
 					}
 				} else {
-					JFrame alreadyRun = new JFrame("Error");
-					alreadyRun.setLayout(new BorderLayout());
-					JLabel label = new JLabel(
-							"server already runs",
-							SwingConstants.CENTER);
-					alreadyRun.add(label, BorderLayout.CENTER);
-					alreadyRun.setSize(150, 100);
-					alreadyRun.setVisible(true);
-					alreadyRun.setResizable(false);
-					Point mainFrameLocation = getLocation();
-					mainFrameLocation.x += 30;
-					mainFrameLocation.y += 30;
-					alreadyRun.setLocation(mainFrameLocation);
+					messageFrame("Warning", "Server already runs");
 				}
 			}
 		});
@@ -77,41 +57,43 @@ public class Server extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (gameRoom != null && gameRoom.isAlive()) {
-					gameRoom.destroyGame();
-					if (runServer != null && runServer.isAlive())
-						runServer.interrupt();
-					if (serverSocket != null && !serverSocket.isClosed())
-						try {
-							serverSocket.close();
-						} catch (IOException e) {
-						}
-					gameRoom = null;
-					runServer = null;
-					serverSocket = null;
+				if (gameRoom != null) {
+					messageFrame("Info", "Server was stopped");
+					setTitle("Server(status: stopped)");
 				}
+				stopServer();
 			}
 		});
 		addWindowListener(new WindowListener() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if (runServer != null && runServer.isAlive())
-					runServer.interrupt();
+				stopServer();
 			}
 
 			@Override
-			public void windowOpened(WindowEvent e) { }
+			public void windowOpened(WindowEvent e) {
+			}
+
 			@Override
-			public void windowIconified(WindowEvent e) { }
+			public void windowIconified(WindowEvent e) {
+			}
+
 			@Override
-			public void windowDeiconified(WindowEvent e) { }
+			public void windowDeiconified(WindowEvent e) {
+			}
+
 			@Override
-			public void windowDeactivated(WindowEvent e) { }
+			public void windowDeactivated(WindowEvent e) {
+			}
+
 			@Override
-			public void windowClosed(WindowEvent e) { }
+			public void windowClosed(WindowEvent e) {
+			}
+
 			@Override
-			public void windowActivated(WindowEvent e) { }
+			public void windowActivated(WindowEvent e) {
+			}
 		});
 		add(stopGame);
 		setSize(300, 100);
@@ -127,7 +109,6 @@ public class Server extends JFrame {
 			@Override
 			public void run() {
 				try {
-					System.out.println("runnint server on port: " + port);
 					serverSocket = new ServerSocket(port);
 					gameRoom = new GameRoom();
 					gameRoom.start();
@@ -137,10 +118,51 @@ public class Server extends JFrame {
 							gameRoom.add(socket);
 						}
 					}
-				} catch (IOException e) { }
+				} catch (IOException e) {
+				}
 			}
 		});
 		runServer.start();
+	}
+
+	private void messageFrame(final String title, final String message) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					JFrame frame = new JFrame(title);
+					frame.setLayout(new BorderLayout());
+					JLabel label = new JLabel(message, SwingConstants.CENTER);
+					frame.add(label, BorderLayout.CENTER);
+					frame.setSize(250, 100);
+					frame.setVisible(true);
+					frame.setResizable(false);
+					Point mainFrameLocation = getLocation();
+					mainFrameLocation.x += 30;
+					mainFrameLocation.y += 30;
+					frame.setLocation(mainFrameLocation);
+				} catch (Exception e) {
+				}
+			}
+		});
+	}
+
+	private void stopServer() {
+		if (gameRoom != null && gameRoom.isAlive()) {
+			gameRoom.destroyGame();
+			if (runServer != null && runServer.isAlive()) {
+				runServer.interrupt();
+				runServer = null;
+			}
+			if (serverSocket != null && !serverSocket.isClosed()) {
+				try {
+					serverSocket.close();
+					serverSocket = null;
+				} catch (IOException e) {
+					serverSocket = null;
+				}
+			}
+			gameRoom = null;
+		}
 	}
 
 	public static void main(String[] args) {

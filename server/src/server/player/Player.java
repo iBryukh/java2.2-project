@@ -31,26 +31,27 @@ public class Player {
 	
 	public void disconnect(){
 		try {
-			if (socket != null)
+			if (socket != null && !socket.isClosed())
 				socket.close();
-			if (objectIS != null)
-				objectIS.close();
 			if (objectOS != null)
 				objectOS.close();
+			if (objectIS != null)
+				objectIS.close();
 			connected = false;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException e) { }
 	}
 	
 	public void send(ArrayList<Player> players) {
 		try {
+			
 			ArrayList<TransferData> list = new ArrayList<>();
 			for (int i = 0; i < players.size(); ++i)
-				list.add(players.get(i).td);
+				if(this != players.get(i))
+					list.add(players.get(i).td);
+			System.out.println("size: "+list.size());
 			objectOS.writeObject(list);
 		} catch (IOException e) {
-			e.printStackTrace();
+			disconnect();
 		}
 	}
 
@@ -58,7 +59,7 @@ public class Player {
 		try {
 			td = (TransferData) (objectIS.readObject());
 		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+			disconnect();
 		}
 	}
 
