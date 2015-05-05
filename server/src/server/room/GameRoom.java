@@ -15,6 +15,10 @@ public class GameRoom extends Thread {
 		players = new ArrayList<Player>();
 	}
 
+	public void destroyGame(){
+		
+	}
+	
 	public void add(Socket socket) throws IOException {
 		synchronized (players) {
 			if (players.size() < 5)
