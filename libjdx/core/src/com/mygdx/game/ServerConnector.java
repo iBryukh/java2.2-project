@@ -32,7 +32,7 @@ public class ServerConnector {
 		ArrayList <PlayerData>  c = data.getPlayers();
 		if (c!=null && c.size() > 0) {
 			for (int i = 0; i < c.size(); ++i) {
-				if (players.size()<c.size()) players.add(new Player(-100, -100, 0, 0));
+				if (players.size()<c.size()) players.add(new Player(1));
 				if (players.size()>c.size()) players.remove(players.size()-1).destroy();
 				try {
 					if (Math.abs(c.get(i).getX() - MyGdxGame.getPlayer().getBody().getPosition().x) >= 4 || Math.abs(c.get(i).getY() - MyGdxGame.getPlayer().getBody().getPosition().y) >= 4)

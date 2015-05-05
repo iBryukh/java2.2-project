@@ -190,7 +190,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	public static void gameOver() {
 		//todo
-		player.setAlpha(0);
+		player.setRandomPosition();
 	}
 
 }

@@ -22,11 +22,12 @@ import com.mygdx.game.transfer.PlayerData;
 
 public class Player extends Sprite{
 
+	public static final Vector2[] places = {new Vector2(),new Vector2(0f,550f),new Vector2(750f,0f),new Vector2(750f, 550f)};
 	private ArrayList<Bullet> newBullets;
 	private ArrayList<Bullet> bullets;
 	private Body body;
 
-	public Player(int type, int x, int y, int angle) {
+	public Player(int type, float x, float y, int angle) {
 		super(doTexture(type));
 		this.setScale(40f / this.getWidth());
 		this.setPosition(x, y);
@@ -49,7 +50,36 @@ public class Player extends Sprite{
 	}
 	
 	public Player () {
-		this (0, 25, 25, 0);
+		//this (0, 25, 25, 0);
+		this (0);
+	}
+	
+	public Player (int type) {
+		//this (0, 25, 25, 0);
+		this (type, -100, -100, 0);
+		setRandomPosition();
+	}
+	
+	public void setRandomPosition () {
+		ArrayList<Player> arr = (ArrayList<Player>) MyGdxGame.getConnector().getEnemiesStatic().clone();
+		if (arr.size()==0) {
+			body.setTransform(new Vector2 ((float)(places[0].x/PIXS_IN_METER)+2f, (float)(places[0].y/PIXS_IN_METER)+2f), 0);
+			return;
+		}
+		arr.add(MyGdxGame.getPlayer());
+		Boolean b = true;
+		for (int i = 0; i < places.length; ++i) {
+			for (Player p: arr) {
+				if (Vector2.dst(places[i].x, places[i].y, p.getX(), p.getY())<50) {
+					b = false;
+				}
+			}
+			if (b) {
+				body.setTransform(new Vector2 ((float)(places[i].x/PIXS_IN_METER)+2f, (float)(places[i].y/PIXS_IN_METER)+2f), 0);
+				break;
+			}
+			b = true;
+		}
 	}
 	
 	public void addBullet (Bullet b) {
