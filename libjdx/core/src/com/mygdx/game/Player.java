@@ -54,12 +54,10 @@ public class Player extends Sprite{
 	}
 	
 	public Player () {
-		//this (0, 25, 25, 0);
 		this (0);
 	}
 	
 	public Player (int type) {
-		//this (0, 25, 25, 0);
 		this (type, -100, -100, 0);
 		setRandomPosition();
 	}

@@ -49,6 +49,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		connector = new ServerConnector();
 		batch = new SpriteBatch();
 		player = new Player();
+		Explosion.clear();
 		
 		createWorldBounds();
 		createLabyrinth();
@@ -68,6 +69,7 @@ public class MyGdxGame extends ApplicationAdapter {
         textFrags = new TextField("", skin);
         textFrags.setPosition(skull.getX()+15, Gdx.graphics.getHeight()-30);
         textFrags.setSize(55, 25);
+        Explosion.addExplosion(100, 100);
 	}
 
 	@Override
@@ -101,6 +103,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		for (Cell c:cells) if (c.isAlive()) c.draw(batch);
 		for (int i = 0; i < player.getBullets().size(); ++i) player.getBullets().get(i).collide();
+		Explosion.drawAll(batch);
 		String frgs = ("00" + player.getFrags());
 		textFrags.setText("     "  + frgs.substring(frgs.length()-3, frgs.length()));
 		textFrags.draw(batch, 1);
