@@ -33,17 +33,14 @@ public class EnterScreen extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {   
-    	//model.Sound.sound();
         mainStage  = new  Stage(StageStyle.TRANSPARENT);  
-       // mainStage  = new  Stage(); 
-            
+      
         root = new StackPane();        
         screen = new ImageView(resManager.getEnterScreenBackground());        
         root.getChildren().add(screen);        
         anPane = new AnchorPane();        
         root.getChildren().add(anPane);   
-        
-        
+                
         String musicFile = "testSound.mp3";     // For example
 
         Media sound = new Media(new File(musicFile).toURI().toString());
@@ -82,23 +79,9 @@ public class EnterScreen extends Application {
         anPane.getChildren().add(playButton);
         anPane.getChildren().add(soundButton);
   
-   /*     ImageView gif = new ImageView("pict/Global-tank-war.gif");        
-        AnchorPane.setLeftAnchor(gif,0.0);
-        AnchorPane.setTopAnchor(gif, 0.0); 
-        anPane.getChildren().add(gif); */
-       
-        
-       // new Scene(root, 800, 600,Color.TRANSPARENT);
         mainStage.setScene(new Scene(root, 800, 600,Color.TRANSPARENT));
-        //  mainStage.initStyle(StageStyle.TRANSPARENT);
-        //mainStage.getScene().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         mainStage.setTitle("Global Tank War");
-        // mainStage.getScene().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-        // Scene scene = new Scene(root, 1024, 768, null);
-        // mainStage.setScene(scene);
-        
         mainStage.show();
-
     }
     
     private TextField textField(){
