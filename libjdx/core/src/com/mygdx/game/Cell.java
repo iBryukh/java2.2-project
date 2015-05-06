@@ -21,36 +21,52 @@ public class Cell extends Sprite {
 	private int type;
 	private Body body;
 	private int health;
+	private float x;
+	private float y;
 	
 	public Cell(float x, float y, int type) {
 		super(doTexture(type));
 		this.id = staticId++;
 		this.type = type;
 		this.health = 3;
+		this.x = x;
+		this.y = y;
 		
 		this.setScale(50f / this.getWidth());
 		this.setPosition(x, y);
 		
 		if (type!=3) {
-			BodyDef bodyDef = new BodyDef();
-	        bodyDef.type = BodyDef.BodyType.StaticBody;
-	        bodyDef.position.set(x/PIXS_IN_METER + 2.5f,y/PIXS_IN_METER + 2.5f);
-	        body = getWorld().createBody(bodyDef);
-	        PolygonShape shape = new PolygonShape();
-	        shape.setAsBox(25f/PIXS_IN_METER, 25f/PIXS_IN_METER);
-	        FixtureDef fixtureDef = new FixtureDef();
-	        fixtureDef.shape = shape;
-	        fixtureDef.density = 1f;
-	        body.createFixture(fixtureDef);
-	        body.setFixedRotation(true);
+			setBody();
 		}
 	}
 
+	private void setBody () {
+		BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x/PIXS_IN_METER + 2.5f,y/PIXS_IN_METER + 2.5f);
+        body = getWorld().createBody(bodyDef);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(25f/PIXS_IN_METER, 25f/PIXS_IN_METER);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 1f;
+        body.createFixture(fixtureDef);
+        body.setFixedRotation(true);
+	}
+	
 	public void update (int health) {
 		if (this.health > health) this.health = health;
 		if (health <= 0 && body!=null) {
 			getWorld().destroyBody(body);
 			body = null;
+		}
+	}
+	
+	public void rebuild () {
+		update(0);
+		health = 3;
+		if (type!=3) {
+			setBody();
 		}
 	}
 	
@@ -106,6 +122,13 @@ public class Cell extends Sprite {
 			CellData d = map.get(c.getId());
 			if (d!=null)
 				c.update(d.getState());
+		}
+	}
+	
+	public static void refreshCells () {
+		ArrayList<Cell> arr = MyGdxGame.getCells();
+		for (Cell c:arr) {
+			c.rebuild();
 		}
 	}
 }

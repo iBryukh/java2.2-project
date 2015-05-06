@@ -27,6 +27,7 @@ public class Player extends Sprite{
 	private ArrayList<Bullet> bullets;
 	private Body body;
 	private int health;
+	private int frags;
 
 	public Player(int type, float x, float y, int angle) {
 		super(doTexture(type));
@@ -34,6 +35,7 @@ public class Player extends Sprite{
 		this.setPosition(x, y);
 		this.setRotation(angle);
 		this.health = 3;
+		this.frags = 0;
 		
 		BodyDef bodyDef = new BodyDef();
         bodyDef.type = (type == 0) ? BodyDef.BodyType.DynamicBody : BodyDef.BodyType.StaticBody;
@@ -135,6 +137,14 @@ public class Player extends Sprite{
 		this.health = health;
 	}
 	
+	public int getFrags() {
+		return frags;
+	}
+
+	public void addFrag() {
+		++this.frags;
+	}
+
 	public void hit() {
 		if (health > 0) {
 			health--;

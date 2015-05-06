@@ -74,6 +74,7 @@ public class Bullet extends Sprite {
 			if (arr2.get(i).getBoundingRectangle().overlaps(getBoundingRectangle())) {
 				if (player == MyGdxGame.getPlayer()) {
 					player.getBullets().remove(this);
+					MyGdxGame.getPlayer().addFrag();
 					return true;
 				}
 			}
