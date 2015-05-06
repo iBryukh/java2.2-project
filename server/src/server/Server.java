@@ -102,6 +102,84 @@ public class Server extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 	}
+	
+	public Server(int port) {
+		super("Server(status: running)");
+		setLayout(new GridLayout(3, 1));
+		final JTextField portF = new JTextField();
+		add(portF);
+		JButton runGame = new JButton("Run");
+		runGame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				if (gameRoom == null) {
+					try {
+						int port = Integer.valueOf(portF.getText());
+						messageFrame("Info", "Server runs on port: " + port);
+						setTitle("Server(status: running)");
+						run(port);
+					} catch (Exception e) {
+						messageFrame("Error", "Invalid port number");
+						portF.setText("");
+					}
+				} else {
+					messageFrame("Warning", "Server already runs");
+				}
+			}
+		});
+		add(runGame);
+		JButton stopGame = new JButton("Stop");
+		stopGame.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (gameRoom != null) {
+					messageFrame("Info", "Server was stopped");
+					setTitle("Server(status: stopped)");
+				}
+				stopServer();
+			}
+		});
+		addWindowListener(new WindowListener() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				stopServer();
+			}
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+			}
+		});
+		add(stopGame);
+		setSize(300, 100);
+		setVisible(true);
+		setResizable(false);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+		portF.setText(port+"");
+		run(port);
+	}
 
 	private void run(final int port) {
 		runServer = new Thread(new Runnable() {
@@ -166,6 +244,15 @@ public class Server extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new Server();
+		if(args.length < 1){
+			new Server();
+		} else {
+			try {
+				int port = Integer.valueOf(args[0]);
+				new Server(port);
+			} catch (Exception e){
+				System.out.println("Bad port");
+			}
+		}
 	}
 }
