@@ -1,5 +1,6 @@
 package com.mygdx.game.transfer;
 
+
 public class CellData implements TransferData{
 
 	private static final long serialVersionUID = 3487629833856715123L;

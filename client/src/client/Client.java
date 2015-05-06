@@ -59,7 +59,7 @@ public class Client {
 		connected = false;
 	}
 
-	public void send(Data d) {
+	public void send(final Data d) {
 		try {
 			objectOS.writeObject(d);
 		} catch (IOException e) {
@@ -74,22 +74,5 @@ public class Client {
 			disconnect();
 		}
 		return null;
-	}
-
-	public static void main(String[] args) throws UnknownHostException {
-		Client c = new Client();
-		PlayerData pd = new PlayerData(1, 1, 1, null);
-		HashMap<Integer, CellData> cells = new HashMap<>();
-		cells.put(1, new CellData(1, 2, 3));
-		cells.put(2, new CellData(2, 2, 3));
-		cells.put(3, new CellData(3, 2, 3));
-		Data d = new Data(pd, cells);
-		while (c.isConnected()) {
-			c.send(d);
-			d = c.get();
-			//if(d.getPlayers().size() == 0)
-				//d = new Data(pd, cells);
-			System.out.println(d.getCells().size());
-		}
 	}
 }

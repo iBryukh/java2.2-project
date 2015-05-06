@@ -52,19 +52,24 @@ public class GameRoom extends Thread {
 	public void run() {
 		while (running) {
 			for (int i = 0; i < players.size(); ++i)
+				players.get(i).get();
+
+			for (int i = 0; i < players.size(); ++i)
 				if (!players.get(i).isConnected())
 					players.remove(i);
-			
-			for(int i = 0; i < players.size(); ++i)
-				players.get(i).get();
-				
+
 			Data toSend = dataToSend();
 			for (int i = 0; i < players.size(); ++i) {
-				players.get(i).send(toSend);
+				if(players.get(i).isFirstTimeConnected()){
+					players.get(i).send(toSend, cells);
+					players.get(i).changeFirstTimeConnected();
+				} else {
+					players.get(i).send(toSend, cells);
+				}
 			}
 
 			try {
-				Thread.sleep(1000/60);
+				Thread.sleep(1000 / 60);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -73,32 +78,39 @@ public class GameRoom extends Thread {
 	}
 
 	private Data dataToSend() {
-		updateCells();
+		HashMap<Integer, CellData> changedCell = updateCells();
 		ArrayList<PlayerData> playersData = new ArrayList<>();
+		int alivePlayers = 0;
 		for (int i = 0; i < players.size(); ++i) {
-			if(players.get(i).getData() != null)
-				playersData.add(players.get(i).getData().getPlayers().get(0));
+			playersData.add(players.get(i).getData().getPlayers().get(0));
+			if (players.get(i).getData().getPlayers().get(0).isAlive())
+				++alivePlayers;
 		}
-		Data toReturn = new Data(playersData, cells);
+		Data toReturn = new Data(playersData, changedCell);
+		toReturn.setNewGame((alivePlayers < 2) ? true : false);
 		return toReturn;
 	}
 
-	private void updateCells() {
+	private HashMap<Integer, CellData> updateCells() {
+		HashMap<Integer, CellData> changedCellPerTick = new HashMap<>();
 		for (int i = 0; i < players.size(); ++i) {
-			if (players.get(i).getData() != null) {
-				HashMap<Integer, CellData> cells = players.get(i).getData().getCells();
-				Set<Integer> keys = cells.keySet();
-				for (Integer id : keys) {
-					CellData thisCell = this.cells.get(id);
-					CellData otherCell = cells.get(id);
-					if (thisCell != null) {
-						this.cells.put(id, (thisCell.getState() > otherCell.getState()) ? otherCell : thisCell);
-					} else {
-						this.cells.put(id, otherCell);
-					}
+			HashMap<Integer, CellData> cells = players.get(i).getData().getCells();
+			Set<Integer> keys = cells.keySet();
+			for (Integer id : keys) {
+				CellData cell = changedCellPerTick.get(id);
+				if (cell == null) {
+					changedCellPerTick.put(id, cells.get(id));
+				} else {
+					CellData cd = cells.get(id);
+					changedCellPerTick.put(id, (cell.getState() > cd.getState()) ? cd : cell);
 				}
 			}
 		}
+		Set<Integer> keys = changedCellPerTick.keySet();
+		for(Integer id : keys){
+			cells.put(id, changedCellPerTick.get(id));
+		}
+		return changedCellPerTick;
 	}
 
 }

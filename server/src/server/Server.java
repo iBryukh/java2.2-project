@@ -103,7 +103,7 @@ public class Server extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
-	public void run(final int port) {
+	private void run(final int port) {
 		runServer = new Thread(new Runnable() {
 
 			@Override
