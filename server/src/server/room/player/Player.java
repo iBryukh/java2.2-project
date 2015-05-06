@@ -28,7 +28,7 @@ public class Player {
 			connected = true;
 			firstTimeConnected = true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			connected = false;
 		}
 	}
 
@@ -58,12 +58,7 @@ public class Player {
 	
 	public void send(final Data data) {
 		try {
-			ArrayList <PlayerData> players = (ArrayList<PlayerData>) data.getPlayers().clone();
-			for(int i = 0 ; i < data.getPlayers().size(); ++i){
-				if(data.getPlayers().get(i) == this.data.getPlayers().get(0))
-					players.remove(i);
-			}
-			Data toSend = new Data(players, data.getCells());
+			Data toSend = new Data(clonePlayers(data), data.getCells());
 			toSend.setNewGame(data.isNewGame());
 			objectOS.writeObject(toSend);
 		} catch (IOException e) {
@@ -73,12 +68,7 @@ public class Player {
 	
 	public void send(final Data data, final HashMap<Integer, CellData> allCells) {
 		try {
-			ArrayList <PlayerData> players = (ArrayList<PlayerData>) data.getPlayers().clone();
-			for(int i = 0 ; i < data.getPlayers().size(); ++i){
-				if(data.getPlayers().get(i) == this.data.getPlayers().get(0))
-					players.remove(i);
-			}
-			Data toSend = new Data(players, allCells);
+			Data toSend = new Data(clonePlayers(data), allCells);
 			toSend.setNewGame(data.isNewGame());
 			objectOS.writeObject(toSend);
 		} catch (IOException e) {
@@ -96,5 +86,14 @@ public class Player {
 	
 	public Data getData(){
 		return data;
+	}
+	
+	private ArrayList<PlayerData> clonePlayers(final Data data){
+		ArrayList<PlayerData> players = new ArrayList<>();
+		for(int i = 0 ; i < data.getPlayers().size(); ++i){
+			if(data.getPlayers().get(i) != this.data.getPlayers().get(0))
+				players.add(data.getPlayers().get(i));
+		}
+		return players;
 	}
 }

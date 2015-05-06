@@ -57,7 +57,7 @@ public class GameRoom extends Thread {
 			for (int i = 0; i < players.size(); ++i)
 				if (!players.get(i).isConnected())
 					players.remove(i);
-
+			
 			Data toSend = dataToSend();
 			for (int i = 0; i < players.size(); ++i) {
 				if(players.get(i).isFirstTimeConnected()){
@@ -70,9 +70,7 @@ public class GameRoom extends Thread {
 
 			try {
 				Thread.sleep(1000 / 60);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			} catch (InterruptedException e) { }
 
 		}
 	}
