@@ -56,47 +56,18 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		player.getBody().setLinearVelocity(0, 0);
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			player.setRotation(90);
-			player.getBody().setLinearVelocity(new Vector2(-30,0));
-		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			player.setRotation(-90);
-			player.getBody().setLinearVelocity(new Vector2(30,0));
-		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			player.setRotation(0);
-			player.getBody().setLinearVelocity(new Vector2(0,30));
-		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			player.setRotation(180);
-			player.getBody().setLinearVelocity(new Vector2(0,-30));
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			int speedX = 0;
-			int speedY = 0;
-			switch ((int)player.getRotation()) {
-			case 0:
-				speedY = 10;
-				break;
-			case -90:
-				speedX = 10;
-				break;
-			case 180:
-				speedY = -10;
-				break;
-			case 90:
-				speedX = -10;
-				break;
-			}
-			Bullet b = new Bullet(player.getBoundingRectangle().x+18, player.getBoundingRectangle().y+18, speedX, speedY);
-			player.addBullet(b);
-		}
+		if (player.isAlive())
+			playerControl();
 		
 		batch.setProjectionMatrix(camera.combined);
 		//debugMatrix = batch.getProjectionMatrix().cpy().scale(10,10, 0);
 		//debugRenderer.render(world, debugMatrix);
 		batch.begin();
-		player.setPosition(player.getBody().getPosition().x*10-20, player.getBody().getPosition().y*10-20);
-		player.draw(batch);
+		if (player.isAlive()) {
+			player.setPosition(player.getBody().getPosition().x*10-20, player.getBody().getPosition().y*10-20);
+			player.draw(batch);
+		}
+		
 		ArrayList<Player> arr = connector.getEnemies();
 		for (Player p: arr) {
 			p.setPosition(p.getBody().getPosition().x*10-20, p.getBody().getPosition().y*10-20);
@@ -152,6 +123,43 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 	}
 	
+	private void playerControl() {
+		player.getBody().setLinearVelocity(0, 0);
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			player.setRotation(90);
+			player.getBody().setLinearVelocity(new Vector2(-30,0));
+		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			player.setRotation(-90);
+			player.getBody().setLinearVelocity(new Vector2(30,0));
+		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			player.setRotation(0);
+			player.getBody().setLinearVelocity(new Vector2(0,30));
+		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			player.setRotation(180);
+			player.getBody().setLinearVelocity(new Vector2(0,-30));
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			int speedX = 0;
+			int speedY = 0;
+			switch ((int)player.getRotation()) {
+			case 0:
+				speedY = 10;
+				break;
+			case -90:
+				speedX = 10;
+				break;
+			case 180:
+				speedY = -10;
+				break;
+			case 90:
+				speedX = -10;
+				break;
+			}
+			Bullet b = new Bullet(player.getBoundingRectangle().x+18, player.getBoundingRectangle().y+18, speedX, speedY);
+			player.addBullet(b);
+		}
+	}
+	
 	private void createWorldBounds () {
         createEdge(0,0,Gdx.graphics.getWidth()/PIXS_IN_METER,0);
         createEdge(0,0,0,Gdx.graphics.getHeight()/PIXS_IN_METER);
@@ -189,7 +197,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 	
 	public static void gameOver() {
-		//todo
 		player.setRandomPosition();
 	}
 

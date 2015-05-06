@@ -8,10 +8,12 @@ public class Data implements TransferData{
 	private static final long serialVersionUID = -2160011134826569848L;
 	private HashMap<Integer, CellData> cells;
 	private ArrayList <PlayerData> players;
+	private Boolean newGame;
 	
 	public Data(ArrayList<PlayerData> players, HashMap<Integer, CellData> cells) {
 		this.cells = cells;
 		this.players = players;
+		this.newGame = false;
 	}
 	
 	public Data(PlayerData player, HashMap<Integer, CellData> cells) {
@@ -34,6 +36,14 @@ public class Data implements TransferData{
 
 	public void setPlayers(ArrayList<PlayerData> players) {
 		this.players = players;
+	}
+
+	public Boolean isNewGame() {
+		return newGame;
+	}
+
+	public void setNewGame(Boolean newGame) {
+		this.newGame = newGame;
 	}
 
 }

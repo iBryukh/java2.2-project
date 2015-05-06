@@ -84,7 +84,8 @@ public class Bullet extends Sprite {
 	public boolean playerCollide () {
 		if (this.getBoundingRectangle().overlaps(MyGdxGame.getPlayer().getBoundingRectangle())) {
 			player.getBullets().remove(this);
-			MyGdxGame.gameOver();
+			//MyGdxGame.gameOver();
+			MyGdxGame.getPlayer().hit();
 			return true;
 		}
 		return false;
