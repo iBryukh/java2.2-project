@@ -12,6 +12,7 @@ import server.room.player.*;
 
 public class GameRoom extends Thread {
 
+	public static final int ONE_PLAYER_IN_ROOM = 1;
 	public static final int DEFAULT_PLAYERS_NUMBER = 5;
 	private final int MAX_PLAYER_IS_ROOM;
 
@@ -64,10 +65,10 @@ public class GameRoom extends Thread {
 					players.get(i).send(toSend, cells);
 					players.get(i).changeFirstTimeConnected();
 				} else {
-					players.get(i).send(toSend, cells);
+					players.get(i).send(toSend);
 				}
 			}
-
+			
 			try {
 				Thread.sleep(1000 / 60);
 			} catch (InterruptedException e) { }
@@ -85,7 +86,10 @@ public class GameRoom extends Thread {
 				++alivePlayers;
 		}
 		Data toReturn = new Data(playersData, changedCell);
-		toReturn.setNewGame((alivePlayers < 2) ? true : false);
+		if (players.size() > ONE_PLAYER_IN_ROOM && alivePlayers < 2) {
+			toReturn.setNewGame(true);
+			cells.clear();
+		}
 		return toReturn;
 	}
 

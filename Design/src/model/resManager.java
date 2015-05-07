@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 public class resManager {
 
 	public static Image getEnterScreenBackground() {
-		return new Image("pict/EnterScreen.png");
+		return new Image("pict/Global tank war.png");
 	}
 
 	// Exit

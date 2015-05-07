@@ -64,6 +64,7 @@ public class Bullet extends Sprite {
 			if (arr.get(i).getBoundingRectangle().overlaps(getBoundingRectangle())) {
 				if (arr.get(i).getType()!=3 && arr.get(i).isAlive()) {
 					arr.get(i).hit();
+					Explosion.addExplosion(this.getX(), this.getY());
 					player.getBullets().remove(this);
 				}
 				return true;
@@ -72,8 +73,12 @@ public class Bullet extends Sprite {
 		ArrayList<Player> arr2 = MyGdxGame.getConnector().getEnemiesStatic();
 		for (int i = 0; i < arr2.size(); ++i) {
 			if (arr2.get(i).getBoundingRectangle().overlaps(getBoundingRectangle())) {
-				if (player == MyGdxGame.getPlayer()) {
-					player.getBullets().remove(this);
+				if (this.player != arr2.get(i)) {
+						Explosion.addExplosion(this.getX(), this.getY());
+						player.getBullets().remove(this);
+					if (player == MyGdxGame.getPlayer()) {
+						MyGdxGame.getPlayer().addFrag();
+					}
 					return true;
 				}
 			}
@@ -85,6 +90,7 @@ public class Bullet extends Sprite {
 		if (this.getBoundingRectangle().overlaps(MyGdxGame.getPlayer().getBoundingRectangle())) {
 			player.getBullets().remove(this);
 			//MyGdxGame.gameOver();
+			Explosion.addExplosion(this.getX(), this.getY());
 			MyGdxGame.getPlayer().hit();
 			return true;
 		}

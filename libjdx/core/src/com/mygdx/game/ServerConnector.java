@@ -35,8 +35,7 @@ public class ServerConnector {
 				if (players.size()<c.size()) players.add(new Player(1));
 				if (players.size()>c.size()) players.remove(players.size()-1).destroy();
 				try {
-					if (Math.abs(c.get(i).getX() - MyGdxGame.getPlayer().getBody().getPosition().x) >= 4 || Math.abs(c.get(i).getY() - MyGdxGame.getPlayer().getBody().getPosition().y) >= 4)
-						players.get(i).update(c.get(i).getX(), c.get(i).getY(), c.get(i).getAngle(), (c.get(i).getBullets().size() > 0) ? c.get(i).getBullets().get(0) : null);
+					players.get(i).update(c.get(i).getX(), c.get(i).getY(), c.get(i).getAngle(), (c.get(i).getBullets().size() > 0) ? c.get(i).getBullets().get(0) : null);
 				}
 				catch (NullPointerException n) {
 					//TODO
@@ -44,6 +43,9 @@ public class ServerConnector {
 				}
 			}
 			Cell.updateCells(data.getCells());
+			if (data.isNewGame()) {
+				MyGdxGame.newGame();
+			}
 		}
 		return players;
 	}

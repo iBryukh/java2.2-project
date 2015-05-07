@@ -11,6 +11,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -20,6 +22,9 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.mygdx.game.transfer.Data;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -33,12 +38,18 @@ public class MyGdxGame extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private static ServerConnector connector;
 	private static ArrayList<Cell> cells;
+	private TextField textHealth;
+	private TextField textFrags;
+	private Sprite heart;
+	private Sprite skull;
+	
 	
 	@Override
 	public void create() {
 		connector = new ServerConnector();
 		batch = new SpriteBatch();
 		player = new Player();
+		Explosion.clear();
 		
 		createWorldBounds();
 		createLabyrinth();
@@ -46,6 +57,19 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         debugRenderer = new Box2DDebugRenderer();
         camera.translate(new Vector3(Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f,0));
+        
+        heart = new Sprite(new Texture("heart.png"));
+        heart.setPosition (0, Gdx.graphics.getHeight()-heart.getHeight());
+        skull = new Sprite(new Texture("skull.png"));
+        skull.setPosition (Gdx.graphics.getWidth()-75, Gdx.graphics.getHeight()-skull.getHeight());
+        Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
+        textHealth = new TextField("", skin);
+        textHealth.setPosition(20, Gdx.graphics.getHeight()-30);
+        textHealth.setSize(55, 25);
+        textFrags = new TextField("", skin);
+        textFrags.setPosition(skull.getX()+15, Gdx.graphics.getHeight()-30);
+        textFrags.setSize(55, 25);
+        Explosion.addExplosion(100, 100);
 	}
 
 	@Override
@@ -79,6 +103,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		for (Cell c:cells) if (c.isAlive()) c.draw(batch);
 		for (int i = 0; i < player.getBullets().size(); ++i) player.getBullets().get(i).collide();
+		Explosion.drawAll(batch);
+		String frgs = ("00" + player.getFrags());
+		textFrags.setText("     "  + frgs.substring(frgs.length()-3, frgs.length()));
+		textFrags.draw(batch, 1);
+		textHealth.setText("     "+player.getHealth()+"/3");
+		textHealth.draw(batch, 1);
+		heart.draw(batch);
+		skull.draw(batch);
 		batch.end();
 	}
 	
@@ -178,6 +210,12 @@ public class MyGdxGame extends ApplicationAdapter {
         world.createBody(bodyDef2).createFixture(fixtureDef2);
         edgeShape.dispose();
         
+	}
+	
+	public static void newGame () {
+		Cell.refreshCells();
+		player.setHealth(3);
+		player.setRandomPosition();
 	}
 	
 	public static World getWorld() {
