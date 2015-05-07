@@ -1,18 +1,13 @@
 package com.mygdx.game;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import client.Client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -22,10 +17,6 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.mygdx.game.transfer.Data;
 
 public class MyGdxGame extends ApplicationAdapter {
 	
@@ -37,11 +28,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Matrix4 debugMatrix;
 	private OrthographicCamera camera;
 	private static ServerConnector connector;
-	private static ArrayList<Cell> cells;
-	private TextField textHealth;
-	private TextField textFrags;
-	private Sprite heart;
-	private Sprite skull;
 	
 	
 	@Override
@@ -58,17 +44,8 @@ public class MyGdxGame extends ApplicationAdapter {
         debugRenderer = new Box2DDebugRenderer();
         camera.translate(new Vector3(Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f,0));
         
-        heart = new Sprite(new Texture("heart.png"));
-        heart.setPosition (0, Gdx.graphics.getHeight()-heart.getHeight());
-        skull = new Sprite(new Texture("skull.png"));
-        skull.setPosition (Gdx.graphics.getWidth()-72, Gdx.graphics.getHeight()-skull.getHeight());
-        Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
-        textHealth = new TextField("", skin);
-        textHealth.setPosition(20, Gdx.graphics.getHeight()-30);
-        textHealth.setSize(55, 25);
-        textFrags = new TextField("", skin);
-        textFrags.setPosition(skull.getX()+15, Gdx.graphics.getHeight()-30);
-        textFrags.setSize(55, 25);
+        GUI.init();
+        GUI.showPrepareForBattle();
 	}
 
 	@Override
@@ -86,7 +63,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		//debugMatrix = batch.getProjectionMatrix().cpy().scale(10,10, 0);
 		//debugRenderer.render(world, debugMatrix);
 		batch.begin();
-		for (Cell c:cells) if (c.isAlive() && c.getType()!=3) c.draw(batch);
+		for (Cell c:Cell.getCells()) if (c.isAlive() && c.getType()!=3) c.draw(batch);
 		if (player.isAlive()) {
 			player.setPosition(player.getBody().getPosition().x*10-20, player.getBody().getPosition().y*10-20);
 			player.draw(batch);
@@ -101,16 +78,10 @@ public class MyGdxGame extends ApplicationAdapter {
 					p.getBullets().get(i).playerCollide();
 			}
 		}
-		for (Cell c:cells) if (c.isAlive() && c.getType()==3) c.draw(batch);
+		for (Cell c:Cell.getCells()) if (c.isAlive() && c.getType()==3) c.draw(batch);
 		for (int i = 0; i < player.getBullets().size(); ++i) player.getBullets().get(i).collide();
 		Explosion.drawAll(batch);
-		String frgs = ("00" + player.getFrags());
-		textFrags.setText("     "  + frgs.substring(frgs.length()-3, frgs.length()));
-		textFrags.draw(batch, 1);
-		textHealth.setText("     "+player.getHealth()+"/3");
-		textHealth.draw(batch, 1);
-		heart.draw(batch);
-		skull.draw(batch);
+		GUI.draw(batch);
 		batch.end();
 	}
 	
@@ -130,10 +101,10 @@ public class MyGdxGame extends ApplicationAdapter {
 				{2, 0, 0, 3, 3, 3, 2, 0, 0, 0, 3, 3, 1, 0, 0, 2},
 				{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 			};
-		cells = new ArrayList<Cell>();
+		
 		for (int i = 0; i < xyarr.length; ++i) {
 			for (int j = 0; j < xyarr[i].length; ++j) {
-				if (xyarr[i][j]!=0) cells.add (new Cell (j*50, Gdx.graphics.getHeight()-(i+1)*50, xyarr[i][j]));
+				if (xyarr[i][j]!=0) Cell.getCells().add (new Cell (j*50, Gdx.graphics.getHeight()-(i+1)*50, xyarr[i][j]));
 			}
 		}
 	}
@@ -179,6 +150,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 	
 	public static void newGame () {
+		GUI.showPrepareForBattle();
 		Cell.refreshCells();
 		player.setHealth(3);
 		player.setRandomPosition();
@@ -190,10 +162,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	public static Player getPlayer() {
 		return player;
-	}
-	
-	public static ArrayList<Cell> getCells() {
-		return cells;
 	}
 
 	public static ServerConnector getConnector() {

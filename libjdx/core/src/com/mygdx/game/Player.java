@@ -1,12 +1,11 @@
 package com.mygdx.game;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import static com.mygdx.game.MyGdxGame.PIXS_IN_METER;
+import static com.mygdx.game.MyGdxGame.getWorld;
 
-import static com.mygdx.game.MyGdxGame.*;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,14 +13,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.mygdx.game.transfer.BulletData;
-import com.mygdx.game.transfer.CellData;
 import com.mygdx.game.transfer.Data;
 import com.mygdx.game.transfer.PlayerData;
 
@@ -116,7 +113,7 @@ public class Player extends Sprite{
 	}
 	
 	public Boolean overlap (){
-		for (Cell c:MyGdxGame.getCells()) {
+		for (Cell c:Cell.getCells()) {
 			if (c.getBoundingRectangle().overlaps(getBoundingRectangle()))
 				return true;
 		}

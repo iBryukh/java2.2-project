@@ -59,7 +59,7 @@ public class Bullet extends Sprite {
 	}
 	
 	public boolean collide() {
-		ArrayList<Cell> arr = MyGdxGame.getCells();
+		ArrayList<Cell> arr = Cell.getCells();
 		for (int i = 0; i < arr.size(); ++i) {
 			if (arr.get(i).getBoundingRectangle().overlaps(getBoundingRectangle())) {
 				if (arr.get(i).getType()!=3 && arr.get(i).isAlive()) {

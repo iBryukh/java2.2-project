@@ -15,6 +15,7 @@ import com.mygdx.game.transfer.CellData;
 
 public class Cell extends Sprite {
 
+	private static ArrayList<Cell> cells = new ArrayList<Cell>();;
 	private static HashMap<Integer, CellData> updatedCells = new HashMap<>();
 	private static int staticId = 0;
 	private int id;
@@ -117,8 +118,7 @@ public class Cell extends Sprite {
 	}
 	
 	public static void updateCells (HashMap<Integer, CellData> map) {
-		ArrayList<Cell> arr = MyGdxGame.getCells();
-		for (Cell c:arr) {
+		for (Cell c:cells) {
 			CellData d = map.get(c.getId());
 			if (d!=null)
 				c.update(d.getState());
@@ -126,9 +126,12 @@ public class Cell extends Sprite {
 	}
 	
 	public static void refreshCells () {
-		ArrayList<Cell> arr = MyGdxGame.getCells();
-		for (Cell c:arr) {
+		for (Cell c:cells) {
 			c.rebuild();
 		}
+	}
+	
+	public static ArrayList<Cell> getCells() {
+		return cells;
 	}
 }
