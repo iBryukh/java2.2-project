@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBuilder;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -25,6 +25,7 @@ public class ErrorScreen extends Application {
 	public Text textError=null;
 
 	public ErrorScreen(String errorT) throws Exception {
+		
 		errorText=errorT;
 		Stage stage= new Stage();
 		start(stage);
@@ -41,20 +42,13 @@ public class ErrorScreen extends Application {
 		anPane = new AnchorPane();
 		root.getChildren().add(anPane);
 
-		Text text = new Text();
-		text.setFont(new Font(50));
-		text.setWrappingWidth(200);
-		text.setTextAlignment(TextAlignment.JUSTIFY);
-		text.setText("ERROR");
-		text.setFill(Color.RED);
-		
-		textError = new Text();
-		textError.setFont(new Font(25));
-		textError.setWrappingWidth(200);
-		textError.setTextAlignment(TextAlignment.JUSTIFY);
-		textError.setText(errorText);
-		textError.setFill(Color.RED);
-
+		Text t=new Text();
+		t.setText(errorText);
+		t.setFill(Color.WHITE);
+		/*t.setPrefRowCount(5);
+        t.setPrefColumnCount(50);
+        t.setWrapText(true);
+        t.setPrefWidth(175);*/
 		
 		Button ok = new Button();
 		ok.setText("OK");
@@ -64,16 +58,13 @@ public class ErrorScreen extends Application {
 				close();
 			}
 		});
-		AnchorPane.setLeftAnchor(textError,130.0);
-		AnchorPane.setTopAnchor(textError, 100.0);
-		AnchorPane.setLeftAnchor(text, 130.0);
-		AnchorPane.setTopAnchor(text, 10.0);
+		AnchorPane.setLeftAnchor(t,130.0);
+		AnchorPane.setTopAnchor(t, 100.0);
 		AnchorPane.setLeftAnchor(ok, 175.0);
-		AnchorPane.setTopAnchor(ok, 200.0);
+		AnchorPane.setTopAnchor(ok, 250.0);
 
 		anPane.getChildren().add(ok);
-		anPane.getChildren().add(text);
-		anPane.getChildren().add(textError);
+		anPane.getChildren().add(t);
 		Scene scene=new Scene(root, 400, 300, Color.TRANSPARENT);
 		scene.getStylesheets().add((getClass().getResource("application.css")).toExternalForm());
 		mainStage.setScene(scene);
@@ -92,4 +83,4 @@ public class ErrorScreen extends Application {
 			mainStage.close();
 		}
 	}
-}
+	}
