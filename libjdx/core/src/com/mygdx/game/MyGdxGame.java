@@ -48,12 +48,12 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create() {
 		connector = new ServerConnector();
 		batch = new SpriteBatch();
-		player = new Player();
 		Explosion.clear();
 		
 		createWorldBounds();
 		createLabyrinth();
-        
+		player = new Player();
+		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         debugRenderer = new Box2DDebugRenderer();
         camera.translate(new Vector3(Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f,0));
@@ -61,7 +61,7 @@ public class MyGdxGame extends ApplicationAdapter {
         heart = new Sprite(new Texture("heart.png"));
         heart.setPosition (0, Gdx.graphics.getHeight()-heart.getHeight());
         skull = new Sprite(new Texture("skull.png"));
-        skull.setPosition (Gdx.graphics.getWidth()-75, Gdx.graphics.getHeight()-skull.getHeight());
+        skull.setPosition (Gdx.graphics.getWidth()-72, Gdx.graphics.getHeight()-skull.getHeight());
         Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
         textHealth = new TextField("", skin);
         textHealth.setPosition(20, Gdx.graphics.getHeight()-30);
@@ -69,7 +69,6 @@ public class MyGdxGame extends ApplicationAdapter {
         textFrags = new TextField("", skin);
         textFrags.setPosition(skull.getX()+15, Gdx.graphics.getHeight()-30);
         textFrags.setSize(55, 25);
-        Explosion.addExplosion(100, 100);
 	}
 
 	@Override
@@ -87,6 +86,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		//debugMatrix = batch.getProjectionMatrix().cpy().scale(10,10, 0);
 		//debugRenderer.render(world, debugMatrix);
 		batch.begin();
+		for (Cell c:cells) if (c.isAlive() && c.getType()!=3) c.draw(batch);
 		if (player.isAlive()) {
 			player.setPosition(player.getBody().getPosition().x*10-20, player.getBody().getPosition().y*10-20);
 			player.draw(batch);
@@ -101,7 +101,7 @@ public class MyGdxGame extends ApplicationAdapter {
 					p.getBullets().get(i).playerCollide();
 			}
 		}
-		for (Cell c:cells) if (c.isAlive()) c.draw(batch);
+		for (Cell c:cells) if (c.isAlive() && c.getType()==3) c.draw(batch);
 		for (int i = 0; i < player.getBullets().size(); ++i) player.getBullets().get(i).collide();
 		Explosion.drawAll(batch);
 		String frgs = ("00" + player.getFrags());
@@ -115,37 +115,20 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 	
 	private void createLabyrinth() {
-		/*
 		int[][] xyarr = 
 			{
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-			};
-			*/
-		int[][] xyarr = 
-			{
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+				{2, 0, 0, 1, 3, 3, 0, 0, 0, 2, 3, 3, 3, 0, 0, 2},
+				{2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 2},
+				{2, 1, 0, 1, 2, 0, 0, 1, 1, 0, 0, 2, 1, 0, 1, 2},
+				{2, 1, 1, 2, 1, 0, 1, 2, 2, 1, 0, 1, 2, 1, 1, 2},
+				{2, 3, 0, 3, 3, 0, 1, 3, 3, 0, 0, 3, 3, 0, 3, 2},
+				{2, 3, 0, 3, 3, 0, 0, 3, 3, 1, 0, 3, 3, 0, 3, 2},
+				{2, 1, 1, 2, 1, 0, 1, 2, 2, 1, 0, 1, 2, 1, 1, 2},
+				{2, 1, 0, 1, 2, 0, 0, 1, 1, 0, 0, 2, 1, 0, 1, 2},
+				{2, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2},
+				{2, 0, 0, 3, 3, 3, 2, 0, 0, 0, 3, 3, 1, 0, 0, 2},
+				{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 			};
 		cells = new ArrayList<Cell>();
 		for (int i = 0; i < xyarr.length; ++i) {
@@ -159,36 +142,19 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.getBody().setLinearVelocity(0, 0);
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			player.setRotation(90);
-			player.getBody().setLinearVelocity(new Vector2(-30,0));
+			player.getBody().setLinearVelocity(new Vector2(-20,0));
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			player.setRotation(-90);
-			player.getBody().setLinearVelocity(new Vector2(30,0));
+			player.getBody().setLinearVelocity(new Vector2(20,0));
 		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			player.setRotation(0);
-			player.getBody().setLinearVelocity(new Vector2(0,30));
+			player.getBody().setLinearVelocity(new Vector2(0,20));
 		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			player.setRotation(180);
-			player.getBody().setLinearVelocity(new Vector2(0,-30));
+			player.getBody().setLinearVelocity(new Vector2(0,-20));
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			int speedX = 0;
-			int speedY = 0;
-			switch ((int)player.getRotation()) {
-			case 0:
-				speedY = 10;
-				break;
-			case -90:
-				speedX = 10;
-				break;
-			case 180:
-				speedY = -10;
-				break;
-			case 90:
-				speedX = -10;
-				break;
-			}
-			Bullet b = new Bullet(player.getBoundingRectangle().x+18, player.getBoundingRectangle().y+18, speedX, speedY);
-			player.addBullet(b);
+			player.shoot();
 		}
 	}
 	

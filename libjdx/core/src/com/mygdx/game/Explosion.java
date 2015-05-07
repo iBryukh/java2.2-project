@@ -26,9 +26,7 @@ public class Explosion {
 	public void draw (Batch batch) {
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		TextureRegion t = animation.getKeyFrame(elapsedTime, true);
-		batch.setColor(1, 1, 1, 0.7f);
 		batch.draw(t, x-t.getRegionWidth()/2, y-t.getRegionHeight()/2);
-		batch.setColor(0, 0, 0, 1f);
 	}
 	
 	public void dispose() {

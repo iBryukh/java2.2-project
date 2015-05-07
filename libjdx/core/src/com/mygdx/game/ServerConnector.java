@@ -36,6 +36,7 @@ public class ServerConnector {
 				if (players.size()>c.size()) players.remove(players.size()-1).destroy();
 				try {
 					players.get(i).update(c.get(i).getX(), c.get(i).getY(), c.get(i).getAngle(), (c.get(i).getBullets().size() > 0) ? c.get(i).getBullets().get(0) : null);
+					players.get(i).setNick(c.get(i).getNick());
 				}
 				catch (NullPointerException n) {
 					//TODO

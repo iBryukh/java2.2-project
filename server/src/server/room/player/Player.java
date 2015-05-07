@@ -91,7 +91,7 @@ public class Player {
 	private ArrayList<PlayerData> clonePlayers(final Data data){
 		ArrayList<PlayerData> players = new ArrayList<>();
 		for(int i = 0 ; i < data.getPlayers().size(); ++i){
-			if(data.getPlayers().get(i) != this.data.getPlayers().get(0))
+			if(this.data!=null && data.getPlayers().get(i) != this.data.getPlayers().get(0))
 				players.add(data.getPlayers().get(i));
 		}
 		return players;

@@ -10,8 +10,10 @@ public class PlayerData implements TransferData{
 	private int angle;
 	private float x;
 	private float y;
+	private String nick;
 	
-	public PlayerData(float x, float y, int angle, Boolean alive, ArrayList<BulletData> bullets) {
+	public PlayerData(String nick, float x, float y, int angle, Boolean alive, ArrayList<BulletData> bullets) {
+		this.nick = nick;
 		this.x = x;
 		this.y = y;
 		this.angle = angle;
@@ -38,4 +40,9 @@ public class PlayerData implements TransferData{
 	public Boolean isAlive() {
 		return alive;
 	}
+
+	public String getNick() {
+		return nick;
+	}
+	
 }
