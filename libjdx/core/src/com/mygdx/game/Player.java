@@ -33,7 +33,7 @@ public class Player extends Sprite{
 	private TextArea tnick;
 	private float elapsedTime;
 
-	public Player(int type, float x, float y, int angle) {
+	public Player(String nick, int type, float x, float y, int angle) {
 		super(doTexture(type));
 		this.setScale(40f / this.getWidth());
 		this.setPosition(x, y);
@@ -41,7 +41,7 @@ public class Player extends Sprite{
 		this.health = 3;
 		this.frags = 0;
 		this.elapsedTime = 0;
-		this.nick = "ivan".toLowerCase();
+		this.nick = nick.toLowerCase();
 		Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
 		tnick = new TextArea("", skin);
 		tnick.setScale (1f, 0.01f);
@@ -70,12 +70,12 @@ public class Player extends Sprite{
 		newBullets = new ArrayList<Bullet>();
 	}
 	
-	public Player () {
-		this (0);
+	public Player (String nick) {
+		this (nick, 0);
 	}
 	
-	public Player (int type) {
-		this (type, -100, -100, 0);
+	public Player (String nick, int type) {
+		this (nick, type, -100, -100, 0);
 		setRandomPosition();
 	}
 	

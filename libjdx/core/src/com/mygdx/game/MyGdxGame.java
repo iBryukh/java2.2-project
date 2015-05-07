@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import java.util.ArrayList;
 
+import client.Client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -27,18 +28,22 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Box2DDebugRenderer debugRenderer;
 	private Matrix4 debugMatrix;
 	private OrthographicCamera camera;
-	private static ServerConnector connector;
+	private static ServerConnector connector; 
+	private String nick;
 	
+	public MyGdxGame(Client client, String nick) {
+		connector = new ServerConnector(client);
+		this.nick = nick;
+	}
 	
 	@Override
 	public void create() {
-		connector = new ServerConnector();
 		batch = new SpriteBatch();
 		Explosion.clear();
 		
 		createWorldBounds();
 		createLabyrinth();
-		player = new Player();
+		player = new Player(nick);
 		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         debugRenderer = new Box2DDebugRenderer();

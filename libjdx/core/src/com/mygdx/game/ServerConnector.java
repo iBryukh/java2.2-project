@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
@@ -14,9 +13,13 @@ public class ServerConnector {
 	ArrayList<Player> players = new ArrayList<Player>();
 	private Client client;
 
+	public ServerConnector(Client client) {
+		this.client = client;
+	}
+	
 	public ServerConnector() {
 		try {
-			client = new Client(InetAddress.getByName(null), 7000);
+			client = new Client();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -32,7 +35,7 @@ public class ServerConnector {
 		ArrayList <PlayerData>  c = data.getPlayers();
 		if (c!=null && c.size() > 0) {
 			for (int i = 0; i < c.size(); ++i) {
-				if (players.size()<c.size()) players.add(new Player(1));
+				if (players.size()<c.size()) players.add(new Player("", 1));
 				if (players.size()>c.size()) players.remove(players.size()-1).destroy();
 				try {
 					players.get(i).update(c.get(i).getX(), c.get(i).getY(), c.get(i).getAngle(), (c.get(i).getBullets().size() > 0) ? c.get(i).getBullets().get(0) : null);

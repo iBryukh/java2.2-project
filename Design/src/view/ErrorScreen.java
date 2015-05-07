@@ -21,18 +21,11 @@ public class ErrorScreen extends Application {
 	Stage mainStage = null;
 	public ImageView screen = null;
 	public AnchorPane anPane = null;
-	public String errorText = "";
+	private static String errorText;
 	public Text textError=null;
 
-	public ErrorScreen(String errorT) throws Exception {
-		
-		errorText=errorT;
-		Stage stage= new Stage();
-		start(stage);
-	}
-
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
 		
 		mainStage = new Stage(StageStyle.TRANSPARENT);
 		StackPane root = new StackPane();
@@ -83,4 +76,10 @@ public class ErrorScreen extends Application {
 			mainStage.close();
 		}
 	}
+	
+	public static void open (String args) {
+		errorText=args;
+		new ErrorScreen().start (new Stage());
+	}
+	
 	}
