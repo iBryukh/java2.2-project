@@ -5,14 +5,29 @@ import java.util.TimerTask;
 
 import javafx.animation.Timeline;
 import javafx.animation.TimelineBuilder;
+import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBuilder;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.resManager;
 import view.EnterScreen;
+import view.ErrorScreen;
+import view.ErrorScreen.closing;
 
 public class PlayScreenEvents {
 
@@ -35,7 +50,6 @@ public class PlayScreenEvents {
 		}
 
 	}
-
 	public static class OnMouseExit implements EventHandler {
 
 		@Override
@@ -43,9 +57,7 @@ public class PlayScreenEvents {
 			ImageView iv = (ImageView) event.getSource();
 			iv.setImage(resManager.getPBI());
 		}
-
 	}
-
 	public static class OnMouseClicked implements EventHandler {
 		private EnterScreen ES = null;
 		public OnMouseClicked(EnterScreen ES) {
@@ -55,15 +67,22 @@ public class PlayScreenEvents {
 		@Override
 		public void handle(Event event) {
 			//metod(ES.nik.getText(),ES.ip.getText());        передача nik і ip
+			try {
+				play();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		private void play() throws Exception{
 			ImageView gif = new ImageView("pict/Global-tank-war.gif");
 			AnchorPane.setLeftAnchor(gif, 0.0);
 			AnchorPane.setTopAnchor(gif, 0.0);
 			ES.anPane.getChildren().add(gif);
-			time();
-		}
-
-		private void time() {
+			//time();
 			Timer timer = new Timer();
+			Timer timer2 = new Timer();
+			
 			TimerTask task = new TimerTask() {
 				public void run() {
 					Platform.runLater(new Runnable() {
@@ -81,7 +100,20 @@ public class PlayScreenEvents {
 					});
 				}
 			};
+			TimerTask task2 = new TimerTask() {
+				public void run() {
+					Platform.runLater(new Runnable() {
+						public void run() {
+							//
+						}
+						
+					});
+				}
+			};
 			timer.schedule(task, 5000);
+			timer2.schedule(task2, 8000);
 		}
+
 	}
+
 }

@@ -31,7 +31,8 @@ public class EnterScreen extends Application {
 	public StackPane root=null;
 	public MediaPlayer mediaPlayer=null;
     
-    @Override
+   
+	@Override
     public void start(Stage primaryStage) throws Exception {   
         mainStage  = new  Stage(StageStyle.TRANSPARENT);  
       
@@ -82,8 +83,9 @@ public class EnterScreen extends Application {
         mainStage.setScene(new Scene(root, 800, 600,Color.TRANSPARENT));
         mainStage.setTitle("Global Tank War");
         mainStage.show();
-    }
-    
+        
+   }
+
     private TextField textField(){
     	TextField field =TextFieldBuilder.create()
         		.style("-fx-background-color:#000000;"
